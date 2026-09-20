@@ -11,3 +11,9 @@ To run this application:
 ```
 npm run dev
 ```
+
+## Assignment Submission Summary
+- **Requirement 1 (Dev Server):** Local development server verified via `npm run dev`.
+- **Requirement 2 (Feature Branch & Edit):** Feature branch created and changes made to `pages/index.js`.
+- **Requirement 3 (Production Build):** Production build verified via `npm run build`.
+- **Requirement 4 (Pull Request):** https://github.com/gavy1997/neighborhood-listing-platform/pull/1
