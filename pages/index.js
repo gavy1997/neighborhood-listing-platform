@@ -10,7 +10,7 @@ function throwError() {
   )
 }
 
-function Home() {
+function Home() {// Requirement 2 feature edit
   const [count, setCount] = useState(0)
   const increment = useCallback(() => {
     setCount((v) => v + 1)
