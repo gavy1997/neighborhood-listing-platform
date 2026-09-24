@@ -17,3 +17,16 @@ npm run dev
 - **Requirement 2 (Feature Branch & Edit):** Feature branch created and changes made to `pages/index.js`.
 - **Requirement 3 (Production Build):** Production build verified via `npm run build`.
 - **Requirement 4 (Pull Request):** https://github.com/gavy1997/neighborhood-listing-platform/pull/1
+## Component Hierarchy
+
+```text
+App (or Page)
+├── Header / SearchFilters (Form with <label>, <select>, <button>)
+├── SponsorBanner (Article/Aside, "Sponsored" badge, Accessible <a href="...">)
+└── PropertyListingGrid (Tailwind responsive grid)
+    └── PropertyCard (x3)
+        ├── Image (with descriptive alt text)
+        ├── Heading (h2 / h3 in proper document order)
+        ├── Address & Price
+        ├── Facts List (ul > li)
+        └── CTA Link/Button ("View Details for [Property Name]")
