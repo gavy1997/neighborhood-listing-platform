@@ -1,63 +1,47 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 export const SearchFilters: React.FC = () => {
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="bg-gray-50 p-4 rounded-lg mb-6 border">
-      <h2 className="text-lg font-semibold mb-3">Filter Properties</h2>
-      
-      {error && (
-        <div id="form-error" role="alert" className="text-red-700 bg-red-100 p-2 rounded mb-3 text-sm">
-          {error}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div className="flex flex-col">
-          <label htmlFor="property-type" className="text-sm font-medium text-gray-700 mb-1">
-            Property Type
+    <section aria-labelledby="search-heading" className="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+      <h2 id="search-heading" className="sr-only">Search and Filter Properties</h2>
+      <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+        <div>
+          <label htmlFor="location-select" className="block text-sm font-medium text-gray-700 mb-1">
+            Location
           </label>
           <select
-            id="property-type"
-            name="propertyType"
-            className="border rounded p-2 focus-visible:ring-2 focus-visible:ring-blue-600"
+            id="location-select"
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
           >
-            <option value="">All Types</option>
-            <option value="apartment">Apartment</option>
-            <option value="house">House</option>
-            <option value="condo">Condo</option>
+            <option value="">All Locations</option>
+            <option value="cityville">Cityville</option>
+            <option value="pleasantville">Pleasantville</option>
+            <option value="seaside">Seaside</option>
           </select>
         </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="price-range" className="text-sm font-medium text-gray-700 mb-1">
+        <div>
+          <label htmlFor="price-select" className="block text-sm font-medium text-gray-700 mb-1">
             Max Price
           </label>
           <select
-            id="price-range"
-            name="priceRange"
-            className="border rounded p-2 focus-visible:ring-2 focus-visible:ring-blue-600"
+            id="price-select"
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
           >
             <option value="">Any Price</option>
-            <option value="1500">$1,500/mo</option>
-            <option value="2500">$2,500/mo</option>
-            <option value="3500">$3,500/mo</option>
+            <option value="2000">$2,000 / mo</option>
+            <option value="3000">$3,000 / mo</option>
+            <option value="4000">$4,000 / mo</option>
           </select>
         </div>
-      </div>
 
-      <button
-        type="submit"
-        className="bg-blue-600 text-white font-medium px-4 py-2 rounded hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-      >
-        Apply Filters
-      </button>
-    </form>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+        >
+          Apply Filters
+        </button>
+      </form>
+    </section>
   );
 };

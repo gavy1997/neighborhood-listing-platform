@@ -48,7 +48,9 @@ const sampleSponsor: Sponsor = {
 export default function Home() {
   return (
     <main className="max-w-6xl mx-auto p-4 md:p-6">
-      <h1 className="text-3xl font-extrabold mb-6">Property Listings</h1>
+      <header className="mb-6">
+        <h1 className="text-3xl font-extrabold text-gray-900">Property Listings</h1>
+      </header>
 
       <SearchFilters />
       <SponsorBanner sponsor={sampleSponsor} />
