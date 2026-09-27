@@ -7,20 +7,19 @@ interface SponsorBannerProps {
 
 export const SponsorBanner: React.FC<SponsorBannerProps> = ({ sponsor }) => {
   return (
-    <aside className="bg-amber-50 border border-amber-200 p-4 rounded-lg flex items-center justify-between mb-6">
-      <div>
-        <span className="inline-block bg-amber-200 text-amber-900 text-xs font-semibold px-2 py-0.5 rounded uppercase tracking-wider mb-1">
+    <aside aria-label="Sponsored Content" className="bg-amber-50 border border-amber-200 p-4 rounded-lg mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex items-center gap-3">
+        <span className="bg-amber-200 text-amber-900 text-xs uppercase font-bold px-2 py-1 rounded">
           Sponsored
         </span>
-        <h2 className="text-lg font-bold text-gray-900">{sponsor.businessName}</h2>
-        <p className="text-sm text-gray-700">{sponsor.tagline}</p>
+        <div>
+          <h2 className="text-base font-semibold text-gray-900">{sponsor.name}</h2>
+          <p className="text-sm text-gray-700">{sponsor.description}</p>
+        </div>
       </div>
       <a
-        href={sponsor.linkUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded hover:bg-amber-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-600"
-        aria-label={`Visit sponsor website for ${sponsor.businessName}`}
+        href={sponsor.link}
+        className="inline-block text-center bg-amber-800 text-white text-sm font-medium py-1.5 px-3 rounded hover:bg-amber-900 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2 shrink-0"
       >
         Learn More
       </a>
