@@ -1,5 +1,13 @@
 import React from 'react';
-import { Property } from '../types';
+
+export interface Property {
+  id: string;
+  title: string;
+  address: string;
+  city: string;
+  price: number;
+  imageUrl: string;
+}
 
 interface PropertyCardProps {
   property: Property;
@@ -8,7 +16,7 @@ interface PropertyCardProps {
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({ property, onFavoriteToggle }) => {
   return (
-    <article className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition focus-within:ring-2 focus-within:ring-blue-500">
+    <article className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
       <img
         src={property.imageUrl}
         alt={`Property listing at ${property.address}, ${property.city}`}
