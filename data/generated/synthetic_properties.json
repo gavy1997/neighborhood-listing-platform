@@ -1,0 +1,20 @@
+[
+  {
+    "property_id": "123e4567-e89b-12d3-a456-426614174000",
+    "street": "124 Conch St",
+    "city": "Bikini Bottom",
+    "state": "CA",
+    "zip_code": "90210",
+    "price": 450000,
+    "bedrooms": 3,
+    "bathrooms": 2.5,
+    "square_feet": 1800,
+    "amenities": ["Garage", "Pool"],
+    "local_sponsors": [
+      {
+        "sponsor_id": "98765432-b12c-34d5-e678-901234567890",
+        "name": "Krusty Krab Real Estate"
+      }
+    ]
+  }
+]
