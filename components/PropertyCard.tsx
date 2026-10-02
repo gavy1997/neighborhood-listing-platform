@@ -1,42 +1,47 @@
 import React from 'react';
-import { Property } from '../types';
+
+export interface Property {
+  id: string;
+  title: string;
+  address: string;
+  city: string;
+  price: number;
+  imageUrl: string;
+}
 
 interface PropertyCardProps {
   property: Property;
+  onFavoriteToggle?: (id: string) => void;
 }
 
-export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
+export const PropertyCard: React.FC<PropertyCardProps> = ({ property, onFavoriteToggle }) => {
   return (
-    <article className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow bg-white flex flex-col h-full">
+    <article className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
       <img
         src={property.imageUrl}
-        alt={property.imageAlt}
+        alt={`Property listing at ${property.address}, ${property.city}`}
         className="w-full h-48 object-cover"
       />
-      <div className="p-4 flex flex-col flex-grow justify-between">
-        <div>
-          <h3 className="text-xl font-bold text-gray-900 mb-1">
-            {property.title}
-          </h3>
-          <p className="text-gray-600 text-sm mb-2">{property.address}</p>
-          <p className="text-2xl font-extrabold text-blue-600 mb-4">
-            ${property.price.toLocaleString()}<span className="text-sm text-gray-500 font-normal">/mo</span>
-          </p>
 
-          <ul className="flex flex-wrap gap-4 text-sm text-gray-700 border-t border-b border-gray-100 py-3 mb-4">
-            <li><span className="font-semibold">{property.bedrooms}</span> beds</li>
-            <li><span className="font-semibold">{property.bathrooms}</span> baths</li>
-            <li><span className="font-semibold">{property.squareFeet.toLocaleString()}</span> sq ft</li>
-          </ul>
-        </div>
+      <div className="p-4">
+        <h3 className="text-lg font-semibold text-gray-900">
+          {property.title}
+        </h3>
 
-        <a
-          href={`/property/${property.id}`}
-          className="inline-block text-center bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-          aria-label={`View details for ${property.title}`}
+        <p className="text-sm text-gray-500">{property.address}, {property.city}</p>
+        <p className="mt-2 text-xl font-bold text-gray-900">${property.price.toLocaleString()}</p>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onFavoriteToggle) onFavoriteToggle(property.id);
+          }}
+          aria-label={`Save ${property.title} to favorites`}
+          className="mt-4 w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
         >
-          View details for {property.title}
-        </a>
+          Favorite
+        </button>
       </div>
     </article>
   );
