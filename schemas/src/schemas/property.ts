@@ -18,5 +18,4 @@ export const PropertySchema = z.object({
     })
   ),
 });
-
-export type Property = z.infer<typeof PropertySchema>;
+export type PropertyListing = z.infer<typeof PropertySchema>;

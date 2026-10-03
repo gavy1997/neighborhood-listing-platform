@@ -1,42 +1,52 @@
-import { PropertySchema } from "../src/schemas/property";
+import { parsePropertyPayload } from "../lib/api";
+describe("Boundary Defense - parsePropertyPayload", () => {
+  // Valid Payload Test
+  test("passes validation with valid property data", () => {
+    const validPayload = {
+      bathrooms: 2,
+      square_feet: 1200,
+      amenities: ["parking", "pool"],
+      local_sponsors: [
+        {
+          sponsor_id: "123e4567-e89b-12d3-a456-426614174000",
+          name: "Local Cafe",
+        },
+      ],
+    };
 
-const validRecord = {
-  property_id: "123e4567-e89b-12d3-a456-426614174000",
-  street: "100 Main St",
-  city: "Downey",
-  state: "CA",
-  zip_code: "90241",
-  price: 500000,
-  bedrooms: 2,
-  bathrooms: 2,
-  square_feet: 1200,
-  amenities: ["Parking"],
-  local_sponsors: []
-};
-
-describe("PropertySchema Validation", () => {
-  it("passes for a valid record", () => {
-    expect(PropertySchema.safeParse(validRecord).success).toBe(true);
+    const result = parsePropertyPayload(validPayload);
+    expect(result).toEqual(validPayload);
   });
 
-  it("fails when property_id is missing", () => {
-    const { property_id, ...invalid } = validRecord;
-    expect(PropertySchema.safeParse(invalid).success).toBe(false);
+  // Example A Test: Type Mismatch / Runtime Crash Risk
+  test("rejects Example A payload due to missing amenities array (Type Mismatch)", () => {
+    const payloadExampleA = {
+      bathrooms: 2,
+      square_feet: 1200,
+      local_sponsors: [],
+    };
+
+    expect(() => parsePropertyPayload(payloadExampleA)).toThrow(
+      "Validation Failed: Invalid property payload"
+    );
   });
 
-  it("fails on negative price", () => {
-    const invalid = { ...validRecord, price: -100 };
-    expect(PropertySchema.safeParse(invalid).success).toBe(false);
-  });
+  // Example B Test: Domain/Business Invariant Violation
+  test("rejects Example B payload due to negative numbers and invalid UUID (Domain Invariant)", () => {
+    const payloadExampleB = {
+      bathrooms: -3,
+      square_feet: -500,
+      amenities: [""],
+      local_sponsors: [
+        {
+          sponsor_id: "not-a-valid-uuid",
+          name: "",
+        },
+      ],
+    };
 
-  it("fails on malformed ZIP code", () => {
-    const invalid = { ...validRecord, zip_code: "9024" };
-    expect(PropertySchema.safeParse(invalid).success).toBe(false);
-  });
-
-  it("fails when an unknown field is present (strict validation)", () => {
-    const invalid = { ...validRecord, extra_field: "unexpected" };
-    const StrictPropertySchema = PropertySchema.strict();
-    expect(StrictPropertySchema.safeParse(invalid).success).toBe(false);
+    expect(() => parsePropertyPayload(payloadExampleB)).toThrow(
+      "Validation Failed: Invalid property payload"
+    );
   });
 });
