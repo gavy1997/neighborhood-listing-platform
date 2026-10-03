@@ -28,9 +28,6 @@
 - **Accepted Suggestions**: Updated `SearchFilters` select controls and `PropertyCard` interactive links with `focus-visible:ring-2`.
 - **Rejected Suggestions**: Suggestions to replace standard HTML form labels with `aria-label` attributes (retained `<label>` elements for screen reader compatibility).
 - **Manual Test Result**: Tested with `Tab` / `Shift+Tab`; verified distinct outline rings on active elements.
-
-- # AI Collaboration Log
-
 ## Checkpoint: JSON Schema & Data Contract Architecture
 
 ### Prompt Pattern Used
@@ -41,9 +38,8 @@
 - **ChatGPT**: Secondary critique for identifying edge-case normalization issues and business rule ambiguities.
 
 ### Useful Output Accepted
-- Strict JSON Schema requiring `property_id`, `street`, `city`, `state`, `zip_code`, `price`, `bedrooms`, `bathrooms`, `square_feet`, `amenities`, and `local_sponsors`.
-- Enforcement of `additionalProperties: false` to prevent unknown field injection.
-- Zod schema source of truth pattern in TypeScript (`src/schemas/property.ts`).
+- Strict JSON Schema requiring core property fields and enforcing `additionalProperties: false`.
+- Single source of truth Zod schema in TypeScript (`src/schemas/property.ts`).
 - AJV validation script with programmatic error logging (`scripts/validate.js`).
 
 ### Rejected Output & Corrections
@@ -56,3 +52,7 @@
 - **Seed Records**: 100% of generated records passed local AJV validation (`node scripts/validate.js`).
 - **Invalid Fixtures**: Unit tests verified failure cases for missing ID, negative price, invalid ZIP format, and unexpected additional fields.
 - **Privacy Verification**: Confirmed zero personal, secret, or real client data present in prompts or committed files.
+## Boundary Validation Implementation
+- Implemented Zod schema parsing in `src/lib/api.ts`.
+- Structured directory hierarchy (`src/lib/` and `src/test/`) and verified native TypeScript execution via `tsx`.
+- Verified JSON schema validation using `node scripts/validate.js`.
