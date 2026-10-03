@@ -52,3 +52,7 @@
 - **Seed Records**: 100% of generated records passed local AJV validation (`node scripts/validate.js`).
 - **Invalid Fixtures**: Unit tests verified failure cases for missing ID, negative price, invalid ZIP format, and unexpected additional fields.
 - **Privacy Verification**: Confirmed zero personal, secret, or real client data present in prompts or committed files.
+## Boundary Validation Implementation
+- Implemented Zod schema parsing in `src/lib/api.ts`.
+- Structured directory hierarchy (`src/lib/` and `src/test/`) and verified native TypeScript execution via `tsx`.
+- Verified JSON schema validation using `node scripts/validate.js`.
