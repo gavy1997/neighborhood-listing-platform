@@ -1,4 +1,4 @@
-import { parsePropertyPayload } from "../lib/api";
+import { parsePropertyPayload } from "../lib/api.ts";
 describe("Boundary Defense - parsePropertyPayload", () => {
   // Valid Payload Test
   test("passes validation with valid property data", () => {
