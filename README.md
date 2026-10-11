@@ -30,3 +30,4 @@ App (or Page)
         ├── Address & Price
         ├── Facts List (ul > li)
         └── CTA Link/Button ("View Details for [Property Name]")
+Lab 1 submission sync update
