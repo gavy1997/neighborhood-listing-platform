@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Flashcard Test</title>
+  <title>Midterm Flashcard Test - Web Fundamentals & Architecture</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -14,6 +14,7 @@
       --text-muted: #94a3b8;
       --correct: #22c55e;
       --incorrect: #ef4444;
+      --badge-bg: #334155;
     }
 
     * {
@@ -36,19 +37,32 @@
 
     header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+      max-width: 600px;
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 8px;
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+    }
+
+    .domain-badge {
+      display: inline-block;
+      background-color: var(--badge-bg);
+      color: #38bdf8;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 10px;
     }
 
     .score-board {
       display: flex;
+      justify-content: center;
       gap: 16px;
-      margin-top: 12px;
-      font-size: 0.95rem;
+      margin-top: 8px;
+      font-size: 0.9rem;
       color: var(--text-muted);
     }
 
@@ -60,8 +74,8 @@
     .card-container {
       perspective: 1000px;
       width: 100%;
-      max-width: 480px;
-      height: 280px;
+      max-width: 600px;
+      height: 320px;
       cursor: pointer;
     }
 
@@ -70,9 +84,9 @@
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
     }
 
     .card.flipped {
@@ -88,7 +102,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 30px;
       text-align: center;
       border-radius: 16px;
       background: var(--card-bg);
@@ -96,24 +110,28 @@
     }
 
     .card-front h2 {
-      font-size: 1.4rem;
-      font-weight: 600;
+      font-size: 1.2rem;
+      font-weight: 500;
+      line-height: 1.5;
     }
 
     .card-back {
       transform: rotateY(180deg);
       background: #1e1b4b;
+      border-color: rgba(99, 102, 241, 0.3);
     }
 
     .card-back p {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       color: #e0e7ff;
+      font-weight: 600;
+      line-height: 1.4;
     }
 
     .hint {
       position: absolute;
       bottom: 16px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -125,7 +143,7 @@
       gap: 12px;
       margin-top: 24px;
       width: 100%;
-      max-width: 480px;
+      max-width: 600px;
     }
 
     button {
@@ -148,10 +166,14 @@
       color: white;
     }
 
+    .btn-wrong:hover { background-color: #dc2626; }
+
     .btn-correct {
       background-color: var(--correct);
       color: white;
     }
+
+    .btn-correct:hover { background-color: #16a34a; }
 
     .btn-reset {
       margin-top: 16px;
@@ -170,7 +192,8 @@
 <body>
 
   <header>
-    <h1>Flashcard Test</h1>
+    <div class="domain-badge" id="domain-badge">Domain 1</div>
+    <h1>Midterm Flashcard Test</h1>
     <div class="score-board">
       <span>Card: <strong id="current-card">1</strong> / <strong id="total-cards">0</strong></span>
       <span>Correct: <strong id="score-correct" style="color: var(--correct)">0</strong></span>
@@ -183,11 +206,11 @@
     <div class="card" id="flashcard">
       <div class="card-face card-front">
         <h2 id="card-question">Loading question...</h2>
-        <span class="hint">Click to flip</span>
+        <span class="hint">Click card to flip answer</span>
       </div>
       <div class="card-face card-back">
         <p id="card-answer">Loading answer...</p>
-        <span class="hint">Click to flip back</span>
+        <span class="hint">Click card to flip back</span>
       </div>
     </div>
   </div>
@@ -201,13 +224,62 @@
   <button class="btn-reset" id="btn-reset">Restart Quiz</button>
 
   <script>
-    // Customize your flashcards here!
     const flashcards = [
-      { question: "What does HTML stand for?", answer: "HyperText Markup Language" },
-      { question: "Which Git command creates a new branch?", answer: "git checkout -b <branch-name>" },
-      { question: "What keyword defines a constant in JavaScript?", answer: "const" },
-      { question: "What is the default port for Next.js dev server?", answer: "3000" },
-      { question: "What CSS property controls element spacing inside borders?", answer: "padding" }
+      // Domain 1: E-Business Infrastructure & Web Fundamentals
+      { domain: "Domain 1: Infrastructure", question: "Which of the following best describes the core function of the Domain Name System (DNS) in e-business infrastructure?", answer: "B) Translating human-readable domain names into machine-readable IP addresses" },
+      { domain: "Domain 1: Infrastructure", question: "When configuring live hosting deployments for a modern web application, what does a CNAME record typically point to?", answer: "B) Another domain name (such as your-app.vercel.app)" },
+      { domain: "Domain 1: Infrastructure", question: "In a client-server architecture model, what is the primary responsibility of the client?", answer: "C) Rendering user interfaces and dispatching HTTP request payloads" },
+      { domain: "Domain 1: Infrastructure", question: "What is the primary purpose of incorporating Generative AI tools as an 'engineering collaborator' in modern web development frameworks?", answer: "B) Accelerating scaffolding and code generation while requiring rigorous human verification" },
+      { domain: "Domain 1: Infrastructure", question: "Which networking protocol operates primarily as a request-response protocol across the World Wide Web for transferring hypermedia documents?", answer: "C) HTTP/HTTPS" },
+      { domain: "Domain 1: Infrastructure", question: "What is the function of an A record within DNS configurations?", answer: "B) Mapping a domain name directly to an IPv4 address" },
+      { domain: "Domain 1: Infrastructure", question: "Which of the following best characterizes a headless CMS architecture?", answer: "A) A system that completely lacks any front-end user interface and serves content via APIs" },
+      { domain: "Domain 1: Infrastructure", question: "Why is separating environment configuration from source code considered critical in web infrastructure?", answer: "B) It protects sensitive secrets, API keys, and database credentials from public code exposure" },
+      { domain: "Domain 1: Infrastructure", question: "What does the acronym CDN stand for in modern cloud web architectures?", answer: "B) Content Delivery Network" },
+      { domain: "Domain 1: Infrastructure", question: "Which of the following illustrates a typical request-response lifecycle step?", answer: "B) The client browser sends an HTTP GET request to a server endpoint and receives an HTML/JSON payload" },
+      { domain: "Domain 1: Infrastructure", question: "What is the primary role of an API (Application Programming Interface) in an e-business ecosystem?", answer: "B) To allow disparate software systems to securely communicate and exchange data" },
+      { domain: "Domain 1: Infrastructure", question: "Which protocol secures HTTP traffic through encryption and cryptographic verification?", answer: "C) HTTPS (TLS/SSL)" },
+      { domain: "Domain 1: Infrastructure", question: "What is the main benefit of utilizing cloud-based deployment platforms like Vercel or Netlify for modern web apps?", answer: "B) Automated continuous deployment pipelines connected directly to Git repositories" },
+      { domain: "Domain 1: Infrastructure", question: "Which term describes an architecture where business logic runs on the client browser while data is fetched asynchronously from backend services?", answer: "A) Single-Page Application (SPA)" },
+      { domain: "Domain 1: Infrastructure", question: "What is the primary purpose of a webhook in event-driven web architecture?", answer: "B) To allow an external service to push real-time HTTP POST notifications to a designated endpoint when an event occurs" },
+      { domain: "Domain 1: Infrastructure", question: "In the context of e-commerce infrastructure, what does PCI-DSS compliance govern?", answer: "B) Security standards for organizations handling credit card and payment data" },
+      { domain: "Domain 1: Infrastructure", question: "What is a primary characteristic of cloud elasticity?", answer: "B) The ability to dynamically scale computing resources up or down based on traffic demand" },
+      { domain: "Domain 1: Infrastructure", question: "Which file is standardly used in Node.js projects to list dependencies, scripts, and project metadata?", answer: "B) package.json" },
+      { domain: "Domain 1: Infrastructure", question: "What is the function of an SSL/TLS certificate in web communications?", answer: "A) To verify domain ownership and encrypt data transmitted between client and server" },
+      { domain: "Domain 1: Infrastructure", question: "Which of the following represents an asynchronous JavaScript execution pattern commonly used for API calls?", answer: "B) Async/Await and Promises" },
+
+      // Domain 2: UI Scaffolding, Semantic HTML, & Accessibility
+      { domain: "Domain 2: UI & Accessibility", question: "Why is the use of semantic HTML5 elements preferred over generic wrappers?", answer: "B) They provide meaningful structural context to screen readers, search engine crawlers, and developers" },
+      { domain: "Domain 2: UI & Accessibility", question: "What does WCAG stand for in the context of digital accessibility standards?", answer: "A) Web Content Accessibility Guidelines" },
+      { domain: "Domain 2: UI & Accessibility", question: "Which WCAG conformance level is typically established as the standard target for enterprise and educational web accessibility?", answer: "B) Level AA" },
+      { domain: "Domain 2: UI & Accessibility", question: "How do screen readers interpret images that lack appropriate alt text attributes?", answer: "B) They either skip the image or read out the raw file name, hindering accessibility for visually impaired users" },
+      { domain: "Domain 2: UI & Accessibility", question: "What is the primary purpose of text-to-design prototyping tools like v0.dev in modern UI workflows?", answer: "B) Translating natural language product requirements into functional UI component code layouts" },
+      { domain: "Domain 2: UI & Accessibility", question: "In responsive web design, what CSS mechanism allows flexible layouts across varying screen sizes without fixed pixel widths?", answer: "A) Flexbox and CSS Grids with relative units (percentages, rem, vw)" },
+      { domain: "Domain 2: UI & Accessibility", question: "What is the primary risk of relying entirely on AI-generated UI code without manual inspection?", answer: "A) Inefficient CSS syntax, unsemantic markup, and hidden accessibility flaws" },
+      { domain: "Domain 2: UI & Accessibility", question: "Which HTML attribute is essential for providing accessible descriptions of form input fields?", answer: "A) aria-label or associated elements with matching for and id attributes" },
+      { domain: "Domain 2: UI & Accessibility", question: "What does the CSS Box Model encompass from innermost to outermost?", answer: "B) Content, Padding, Border, Margin" },
+      { domain: "Domain 2: UI & Accessibility", question: "Which of the following best describes Universal Design in digital products?", answer: "A) Designing products to be usable by all people to the greatest extent possible without needing adaptation" },
+      { domain: "Domain 2: UI & Accessibility", question: "What role do color contrast ratios play in web accessibility standards?", answer: "B) They ensure text is legible against background colors for users with visual impairments or color blindness" },
+      { domain: "Domain 2: UI & Accessibility", question: "Why is keyboard navigation testing critical for web accessibility?", answer: "A) Many users with motor impairments or screen readers navigate web interfaces primarily using keyboard controls (Tab, Enter, Arrow keys)" },
+      { domain: "Domain 2: UI & Accessibility", question: "What is the function of the landmark element in semantic HTML?", answer: "B) Enclosing the primary dominant content unique to the document" },
+      { domain: "Domain 2: UI & Accessibility", question: "Which CSS layout module is best suited for one-dimensional layouts (rows or columns)?", answer: "A) CSS Flexbox" },
+      { domain: "Domain 2: UI & Accessibility", question: "Which CSS layout module is optimized for two-dimensional layouts (rows and columns simultaneously)?", answer: "A) CSS Grid" },
+      { domain: "Domain 2: UI & Accessibility", question: "What does responsive typography entail in modern web design?", answer: "B) Scaling font sizes fluidly using relative units (such as rem or clamp()) to maintain readability across viewports" },
+      { domain: "Domain 2: UI & Accessibility", question: "What is an AI Transparency Log used for in AI-augmented engineering coursework?", answer: "A) Tracking the exact prompt iterations, AI tool outputs, and human verification/refactoring steps performed" },
+      { domain: "Domain 2: UI & Accessibility", question: "Why should web developers avoid using 'click here' as anchor link text?", answer: "A) It provides no contextual information about the link destination for screen reader users scanning page links" },
+      { domain: "Domain 2: UI & Accessibility", question: "What is the purpose of semantic heading tags (h1 through h6)?", answer: "A) To establish a clear, hierarchical document outline that aids navigation and comprehension" },
+      { domain: "Domain 2: UI & Accessibility", question: "How does progressive enhancement affect web development strategy?", answer: "A) Building a baseline functional experience for all browsers first, then layering advanced styling and JS for capable modern browsers" },
+
+      // Domain 3: Client-Side Logic, JavaScript, & Debugging
+      { domain: "Domain 3: JavaScript & Logic", question: "What is the primary role of the Document Object Model (DOM) in web browsers?", answer: "B) Representing the page so programs can change document structure, style, and content dynamically" },
+      { domain: "Domain 3: JavaScript & Logic", question: "How do JavaScript event listeners function within a web application?", answer: "A) They wait for specific user interactions (like clicks, keypresses, or form submissions) and execute callback functions in response" },
+      { domain: "Domain 3: JavaScript & Logic", question: "What is the primary purpose of browser developer tools (such as Chrome DevTools Console and Network tabs)?", answer: "B) Inspecting DOM elements, monitoring network requests, debugging JavaScript errors, and profiling performance" },
+      { domain: "Domain 3: JavaScript & Logic", question: "What does variable scope refer to in JavaScript programming?", answer: "B) The accessibility and visibility of variables within different parts of code blocks or functions" },
+      { domain: "Domain 3: JavaScript & Logic", question: "In JavaScript, what is the difference between let, const, and var for variable declarations?", answer: "B) const declares variables that cannot be reassigned, while let and var allow reassignment with block vs function scoping" },
+      { domain: "Domain 3: JavaScript & Logic", question: "What is an asynchronous callback or promise rejection typically signalled by in browser consoles?", answer: "B) An uncaught exception or error stack trace log in red text" },
+      { domain: "Domain 3: JavaScript & Logic", question: "What does JSON stand for in web data exchange?", answer: "A) JavaScript Object Notation" },
+      { domain: "Domain 3: JavaScript & Logic", question: "Why is client-side input validation insufficient as a sole security measure?", answer: "A) Client-side code runs on the user's device and can be easily bypassed or manipulated by malicious actors" },
+      { domain: "Domain 3: JavaScript & Logic", question: "What is the purpose of array manipulation methods like .map(), .filter(), and .reduce() in JavaScript?", answer: "A) To execute declarative, functional transformations on data collections without mutating original arrays directly" },
+      { domain: "Domain 3: JavaScript & Logic", question: "What does the term 'Chaos Engineering' refer to in lab team exercises?", answer: "A) Intentionally introducing controlled faults or bugs into codebases to test team resilience, debugging skills, and error handling" }
     ];
 
     let currentIndex = 0;
@@ -215,6 +287,7 @@
     let scoreWrong = 0;
 
     const flashcardEl = document.getElementById("flashcard");
+    const domainBadgeEl = document.getElementById("domain-badge");
     const questionEl = document.getElementById("card-question");
     const answerEl = document.getElementById("card-answer");
     const currentCardEl = document.getElementById("current-card");
@@ -228,11 +301,13 @@
       flashcardEl.classList.remove("flipped");
       setTimeout(() => {
         if (currentIndex < flashcards.length) {
+          domainBadgeEl.textContent = flashcards[currentIndex].domain;
           questionEl.textContent = flashcards[currentIndex].question;
           answerEl.textContent = flashcards[currentIndex].answer;
           currentCardEl.textContent = currentIndex + 1;
         } else {
-          questionEl.textContent = "🎉 Test Complete!";
+          domainBadgeEl.textContent = "Complete!";
+          questionEl.textContent = "🎉 Midterm Practice Complete!";
           answerEl.textContent = `Final Score: ${scoreCorrect} / ${flashcards.length}`;
           currentCardEl.textContent = flashcards.length;
         }
@@ -245,7 +320,8 @@
     });
 
     // Score handlers
-    document.getElementById("btn-correct").addEventListener("click", () => {
+    document.getElementById("btn-correct").addEventListener("click", (e) => {
+      e.stopPropagation();
       if (currentIndex < flashcards.length) {
         scoreCorrect++;
         scoreCorrectEl.textContent = scoreCorrect;
@@ -254,7 +330,8 @@
       }
     });
 
-    document.getElementById("btn-wrong").addEventListener("click", () => {
+    document.getElementById("btn-wrong").addEventListener("click", (e) => {
+      e.stopPropagation();
       if (currentIndex < flashcards.length) {
         scoreWrong++;
         scoreWrongEl.textContent = scoreWrong;
@@ -277,3 +354,510 @@
   </script>
 </body>
 </html>
+
+Domain 1: E-Business Infrastructure & Web Fundamentals (Questions 1–20)
+
+Which of the following best describes the core function of the Domain Name System (DNS) in e-business infrastructure?
+
+A) Encrypting database queries using asymmetric keys
+
+B) Translating human-readable domain names into machine-readable IP addresses
+
+C) Managing local browser session state and cookies
+
+D) Compiling TypeScript code into production JavaScript bundles
+
+When configuring live hosting deployments for a modern web application, what does a CNAME record typically point to?
+
+A) A specific IPv4 address (e.g., 192.0.2.1)
+
+B) Another domain name (such as your-app.vercel.app)
+
+C) The private database credentials file (.env)
+
+D) An SSL certificate revocation endpoint
+
+In a client-server architecture model, what is the primary responsibility of the client?
+
+A) Executing SQL queries and validating row-level security policies
+
+B) Managing persistent session storage and generating database backups
+
+C) Rendering user interfaces and dispatching HTTP request payloads
+
+D) Serving raw TCP packets to upstream proxy servers
+
+What is the primary purpose of incorporating Generative AI tools as an "engineering collaborator" in modern web development frameworks?
+
+A) Eliminating the need for version control systems entirely
+
+B) Accelerating scaffolding and code generation while requiring rigorous human verification
+
+C) Automatically passing all accessibility and OWASP security audits without testing
+
+D) Bypassing database schema design constraints
+
+Which networking protocol operates primarily as a request-response protocol across the World Wide Web for transferring hypermedia documents?
+
+A) SMTP
+
+B) SSH
+
+C) HTTP/HTTPS
+
+D) FTP
+
+What is the function of an A record within DNS configurations?
+
+A) Directing mail exchange servers
+
+B) Mapping a domain name directly to an IPv4 address
+
+C) Defining cryptographic security tokens
+
+D) Establishing a canonical subdomain alias
+
+Which of the following best characterizes a headless CMS architecture?
+
+A) A system that completely lacks any front-end user interface and serves content via APIs
+
+B) A monolithic application where template engines render HTML directly on the server
+
+C) A database engine that does not utilize indexing tables
+
+D) An operating system running without a graphical display monitor
+
+Why is separating environment configuration from source code considered critical in web infrastructure?
+
+A) It prevents CSS stylesheets from conflicting with JavaScript runtimes
+
+B) It protects sensitive secrets, API keys, and database credentials from public code exposure
+
+C) It ensures web pages render faster on mobile viewports
+
+D) It automates DNS propagation across multiple registrars
+
+What does the acronym CDN stand for in modern cloud web architectures?
+
+A) Central Database Node
+
+B) Content Delivery Network
+
+C) Cascading Design Notation
+
+D) Common Developer Namespace
+
+Which of the following illustrates a typical request-response lifecycle step?
+
+A) The database executes a cron job without user intervention
+
+B) The client browser sends an HTTP GET request to a server endpoint and receives an HTML/JSON payload
+
+C) The compiler translates TypeScript interfaces into binary machine instructions
+
+D) The Git repository commits local changes automatically
+
+What is the primary role of an API (Application Programming Interface) in an e-business ecosystem?
+
+A) To provide physical cooling for server racks
+
+B) To allow disparate software systems to securely communicate and exchange data
+
+C) To format text documents into PDF layouts
+
+D) To replace semantic HTML tags with proprietary containers
+
+Which protocol secures HTTP traffic through encryption and cryptographic verification?
+
+A) FTP
+
+B) Telnet
+
+C) HTTPS (TLS/SSL)
+
+D) POP3
+
+What is the main benefit of utilizing cloud-based deployment platforms like Vercel or Netlify for modern web apps?
+
+A) Eliminating all potential cyber security vulnerabilities
+
+B) Automated continuous deployment pipelines connected directly to Git repositories
+
+C) Guaranteed exemption from data privacy regulations
+
+D) Manual server rack configuration requirements
+
+Which term describes an architecture where business logic runs on the client browser while data is fetched asynchronously from backend services?
+
+A) Single-Page Application (SPA)
+
+B) Mainframe Batch Processing
+
+C) Static Punch-Card System
+
+D) Terminal Emulation Server
+
+What is the primary purpose of a webhook in event-driven web architecture?
+
+A) To continuously poll a server for status changes every second
+
+B) To allow an external service to push real-time HTTP POST notifications to a designated endpoint when an event occurs
+
+C) To minify CSS stylesheets before production build
+
+D) To scrape competitor pricing data automatically
+
+In the context of e-commerce infrastructure, what does PCI-DSS compliance govern?
+
+A) Academic grading standards for computer science courses
+
+B) Security standards for organizations handling credit card and payment data
+
+C) Web accessibility guidelines for individuals with visual impairments
+
+D) Open-source licensing compatibility matrices
+
+What is a primary characteristic of cloud elasticity?
+
+A) Fixed hardware allocation that cannot be changed after purchase
+
+B) The ability to dynamically scale computing resources up or down based on traffic demand
+
+C) Permanent static IP address assignment for all client devices
+
+D) Elimination of network latency across global regions
+
+Which file is standardly used in Node.js projects to list dependencies, scripts, and project metadata?
+
+A) index.html
+
+B) package.json
+
+C) styles.css
+
+D) tsconfig.json
+
+What is the function of an SSL/TLS certificate in web communications?
+
+A) To verify domain ownership and encrypt data transmitted between client and server
+
+B) To compress image assets for faster mobile loading
+
+C) To generate automatic unit tests for React components
+
+D) To store user passwords in plain text for easy retrieval
+
+Which of the following represents an asynchronous JavaScript execution pattern commonly used for API calls?
+
+A) Synchronous file blocking loops
+
+B) Async/Await and Promises
+
+C) Static HTML injection tags
+
+D) Monolithic shell scripts
+
+Domain 2: UI Scaffolding, Semantic HTML, & Accessibility (Questions 21–40)
+
+Why is the use of semantic HTML5 elements (such as , , , and ) preferred over generic wrappers?
+
+A) They execute JavaScript code faster in browser engines
+
+B) They provide meaningful structural context to screen readers, search engine crawlers, and developers
+
+C) They automatically encrypt form inputs against SQL injection
+
+D) They remove the need for CSS styling entirely
+
+What does WCAG stand for in the context of digital accessibility standards?
+
+A) Web Content Accessibility Guidelines
+
+B) Worldwide Cascading Architecture Group
+
+C) Wireless Code Authentication Governance
+
+D) Web Component Access Protocol
+
+Which WCAG conformance level is typically established as the standard target for enterprise and educational web accessibility?
+
+A) Level A
+
+B) Level AA
+
+C) Level AAA
+
+D) Level Z
+
+How do screen readers interpret images that lack appropriate alt text attributes?
+
+A) They intelligently generate a detailed description of the image contents
+
+B) They either skip the image or read out the raw file name, hindering accessibility for visually impaired users
+
+C) They crash the browser tab immediately
+
+D) They automatically apply decorative styling filters
+
+What is the primary purpose of text-to-design prototyping tools like v0.dev in modern UI workflows?
+
+A) Replacing all software engineers with automated bots
+
+B) Translating natural language product requirements into functional UI component code layouts
+
+C) Compiling database migrations into relational schemas
+
+D) Generating SSL certificates for domain registrars
+
+In responsive web design, what CSS mechanism allows flexible layouts across varying screen sizes without fixed pixel widths?
+
+A) Flexbox and CSS Grids with relative units (percentages, rem, vw)
+
+B) Hardcoded table cell widths in HTML attributes
+
+C) Static inline styling blocks
+
+D) Flash plugin containers
+
+What is the primary risk of relying entirely on AI-generated UI code without manual inspection?
+
+A) Inefficient CSS syntax, unsemantic markup, and hidden accessibility flaws
+
+B) Instantaneous server crashes across all cloud regions
+
+C) Automatic cancellation of domain name registrations
+
+D) Permanent deletion of Git commit histories
+
+Which HTML attribute is essential for providing accessible descriptions of form input fields?
+
+A) aria-label or associated elements with matching for and id attributes
+
+B) style="display:none"
+
+C) class="hidden-input"
+
+D) onclick="validate()"
+
+What does the CSS Box Model encompass from innermost to outermost?
+
+A) Margin, Border, Padding, Content
+
+B) Content, Padding, Border, Margin
+
+C) Border, Content, Margin, Padding
+
+D) Padding, Margin, Content, Border
+
+Which of the following best describes Universal Design in digital products?
+
+A) Designing products to be usable by all people to the greatest extent possible without needing adaptation
+
+B) Building separate websites exclusively for mobile devices
+
+C) Restricting software access to expert technical users
+
+D) Utilizing only monochrome color schemes
+
+What role do color contrast ratios play in web accessibility standards?
+
+A) They determine how fast images load on slow cellular connections
+
+B) They ensure text is legible against background colors for users with visual impairments or color blindness
+
+C) They calculate the monetary cost of cloud hosting bandwidth
+
+D) They dictate database indexing efficiency
+
+Why is keyboard navigation testing critical for web accessibility?
+
+A) Many users with motor impairments or screen readers navigate web interfaces primarily using keyboard controls (Tab, Enter, Arrow keys)
+
+B) Keyboards are faster than computer mice for database administration
+
+C) Browsers disable mouse clicks during production deployments
+
+D) It prevents CSS stylesheets from loading incorrectly
+
+What is the function of the landmark element in semantic HTML?
+
+A) Containing site-wide navigation links and logos
+
+B) Enclosing the primary dominant content unique to the document
+
+C) Storing JavaScript event listener definitions
+
+D) Holding copyright notices and footer links
+
+Which CSS layout module is best suited for one-dimensional layouts (rows or columns)?
+
+A) CSS Flexbox
+
+B) CSS Grid
+
+C) HTML Tables
+
+D) Absolute Positioning Floats
+
+Which CSS layout module is optimized for two-dimensional layouts (rows and columns simultaneously)?
+
+A) CSS Grid
+
+B) Inline Block
+
+C) Float Clearing
+
+D) Bulleted Lists
+
+What does responsive typography entail in modern web design?
+
+A) Using fixed 12px fonts across all screen resolutions
+
+B) Scaling font sizes fluidly using relative units (such as rem or clamp()) to maintain readability across viewports
+
+C) Embedding rasterized images of text instead of live characters
+
+D) Disabling font smoothing on mobile devices
+
+What is an AI Transparency Log used for in AI-augmented engineering coursework?
+
+A) Tracking the exact prompt iterations, AI tool outputs, and human verification/refactoring steps performed
+
+B) Logging the electricity consumption of local server racks
+
+C) Recording customer credit card transactions in plain text
+
+D) Generating automated invoice summaries
+
+Why should web developers avoid using "click here" as anchor link text?
+
+A) It provides no contextual information about the link destination for screen reader users scanning page links
+
+B) It violates JavaScript syntax rules
+
+C) It prevents CSS styles from applying correctly
+
+D) It increases server response time
+
+What is the purpose of semantic heading tags ( through )?
+
+A) To establish a clear, hierarchical document outline that aids navigation and comprehension
+
+B) To change font colors randomly across paragraphs
+
+C) To define database table relationships
+
+D) To inject executable script payloads into the DOM
+
+How does progressive enhancement affect web development strategy?
+
+A) Building a baseline functional experience for all browsers first, then layering advanced styling and JS for capable modern browsers
+
+B) Designing exclusively for the newest browser version and blocking older clients
+
+C) Eliminating HTML entirely in favor of compiled binary applications
+
+D) Ignoring mobile devices until desktop optimization is 100% complete
+
+Domain 3: Client-Side Logic, JavaScript, & Debugging (Questions 41–60)
+
+What is the primary role of the Document Object Model (DOM) in web browsers?
+
+A) Storing persistent records on cloud database servers
+
+B) Representing the page so programs can change document structure, style, and content dynamically
+
+C) Compiling TypeScript interfaces into bytecode
+
+D) Managing DNS routing tables
+
+How do JavaScript event listeners function within a web application?
+
+A) They wait for specific user interactions (like clicks, keypresses, or form submissions) and execute callback functions in response
+
+B) They compile server-side SQL queries into relational tables
+
+C) They encrypt local storage cookies automatically
+
+D) They check domain name registration expiration dates
+
+What is the primary purpose of browser developer tools (such as Chrome DevTools Console and Network tabs)?
+
+A) Designing marketing graphics and corporate logos
+
+B) Inspecting DOM elements, monitoring network requests, debugging JavaScript errors, and profiling performance
+
+C) Purchasing domain names and managing registrar accounts
+
+D) Provisioning virtual private servers in cloud data centers
+
+What does variable scope refer to in JavaScript programming?
+
+A) The speed at which a function executes mathematical calculations
+
+B) The accessibility and visibility of variables within different parts of code blocks or functions
+
+C) The amount of memory allocated for CSS stylesheets
+
+D) The number of parameters an API endpoint accepts
+
+In JavaScript, what is the difference between let, const, and var for variable declarations?
+
+A) var is block-scoped, while let and const are globally scoped
+
+B) const declares variables that cannot be reassigned, while let and var allow reassignment with block vs function scoping
+
+C) There is no functional difference; they are interchangeable aliases
+
+D) const can only be used in server-side Node.js environments
+
+What is an asynchronous callback or promise rejection typically signalled by in browser consoles?
+
+A) A green success banner
+
+B) An uncaught exception or error stack trace log in red text
+
+C) An automatic database backup confirmation
+
+D) A DNS lookup redirection notice
+
+What does JSON stand for in web data exchange?
+
+A) JavaScript Object Notation
+
+B) Java Secure Operational Network
+
+C) Joint Syntax Object Namespace
+
+D) jQuery Server Operation Node
+
+Why is client-side input validation insufficient as a sole security measure?
+
+A) Client-side code runs on the user's device and can be easily bypassed or manipulated by malicious actors
+
+B) Browsers do not support JavaScript form validation functions
+
+C) Client validation slows down server response times significantly
+
+D) It prevents CSS stylesheets from rendering
+
+What is the purpose of array manipulation methods like .map(), .filter(), and .reduce() in JavaScript?
+
+A) To execute declarative, functional transformations on data collections without mutating original arrays directly
+
+B) To query PostgreSQL databases using raw SQL syntax
+
+C) To configure Vercel deployment routing rules
+
+D) To compile TypeScript code into ES5 bundles
+
+What does the term "Chaos Engineering" refer to in lab team exercises?
+
+A) Intentionally introducing controlled faults or bugs into codebases to test team resilience, debugging skills, and error handling
+
+B) Randomly deleting production databases without backups
+
+C) Writing code without using indentation or comments
+
+D) Refusing to use version control systems
+
