@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Flashcard Test</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --correct: #22c55e;
+      --incorrect: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .score-board {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .score-board span strong {
+      color: var(--text);
+    }
+
+    /* Flashcard Container */
+    .card-container {
+      perspective: 1000px;
+      width: 100%;
+      max-width: 480px;
+      height: 280px;
+      cursor: pointer;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      border-radius: 16px;
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-front h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      background: #1e1b4b;
+    }
+
+    .card-back p {
+      font-size: 1.2rem;
+      color: #e0e7ff;
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 16px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-wrong {
+      background-color: var(--incorrect);
+      color: white;
+    }
+
+    .btn-correct {
+      background-color: var(--correct);
+      color: white;
+    }
+
+    .btn-reset {
+      margin-top: 16px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      max-width: 200px;
+    }
+
+    .btn-reset:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Flashcard Test</h1>
+    <div class="score-board">
+      <span>Card: <strong id="current-card">1</strong> / <strong id="total-cards">0</strong></span>
+      <span>Correct: <strong id="score-correct" style="color: var(--correct)">0</strong></span>
+      <span>Wrong: <strong id="score-wrong" style="color: var(--incorrect)">0</strong></span>
+    </div>
+  </header>
+
+  <!-- Flashcard -->
+  <div class="card-container" id="card-container">
+    <div class="card" id="flashcard">
+      <div class="card-face card-front">
+        <h2 id="card-question">Loading question...</h2>
+        <span class="hint">Click to flip</span>
+      </div>
+      <div class="card-face card-back">
+        <p id="card-answer">Loading answer...</p>
+        <span class="hint">Click to flip back</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="controls">
+    <button class="btn-wrong" id="btn-wrong">Incorrect ✕</button>
+    <button class="btn-correct" id="btn-correct">Correct ✓</button>
+  </div>
+
+  <button class="btn-reset" id="btn-reset">Restart Quiz</button>
+
+  <script>
+    // Customize your flashcards here!
+    const flashcards = [
+      { question: "What does HTML stand for?", answer: "HyperText Markup Language" },
+      { question: "Which Git command creates a new branch?", answer: "git checkout -b <branch-name>" },
+      { question: "What keyword defines a constant in JavaScript?", answer: "const" },
+      { question: "What is the default port for Next.js dev server?", answer: "3000" },
+      { question: "What CSS property controls element spacing inside borders?", answer: "padding" }
+    ];
+
+    let currentIndex = 0;
+    let scoreCorrect = 0;
+    let scoreWrong = 0;
+
+    const flashcardEl = document.getElementById("flashcard");
+    const questionEl = document.getElementById("card-question");
+    const answerEl = document.getElementById("card-answer");
+    const currentCardEl = document.getElementById("current-card");
+    const totalCardsEl = document.getElementById("total-cards");
+    const scoreCorrectEl = document.getElementById("score-correct");
+    const scoreWrongEl = document.getElementById("score-wrong");
+
+    totalCardsEl.textContent = flashcards.length;
+
+    function renderCard() {
+      flashcardEl.classList.remove("flipped");
+      setTimeout(() => {
+        if (currentIndex < flashcards.length) {
+          questionEl.textContent = flashcards[currentIndex].question;
+          answerEl.textContent = flashcards[currentIndex].answer;
+          currentCardEl.textContent = currentIndex + 1;
+        } else {
+          questionEl.textContent = "🎉 Test Complete!";
+          answerEl.textContent = `Final Score: ${scoreCorrect} / ${flashcards.length}`;
+          currentCardEl.textContent = flashcards.length;
+        }
+      }, 150);
+    }
+
+    // Toggle Flip
+    document.getElementById("card-container").addEventListener("click", () => {
+      flashcardEl.classList.toggle("flipped");
+    });
+
+    // Score handlers
+    document.getElementById("btn-correct").addEventListener("click", () => {
+      if (currentIndex < flashcards.length) {
+        scoreCorrect++;
+        scoreCorrectEl.textContent = scoreCorrect;
+        currentIndex++;
+        renderCard();
+      }
+    });
+
+    document.getElementById("btn-wrong").addEventListener("click", () => {
+      if (currentIndex < flashcards.length) {
+        scoreWrong++;
+        scoreWrongEl.textContent = scoreWrong;
+        currentIndex++;
+        renderCard();
+      }
+    });
+
+    document.getElementById("btn-reset").addEventListener("click", () => {
+      currentIndex = 0;
+      scoreCorrect = 0;
+      scoreWrong = 0;
+      scoreCorrectEl.textContent = "0";
+      scoreWrongEl.textContent = "0";
+      renderCard();
+    });
+
+    // Initial load
+    renderCard();
+  </script>
+</body>
+</html>
