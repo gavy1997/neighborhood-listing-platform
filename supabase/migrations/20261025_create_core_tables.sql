@@ -32,20 +32,18 @@ create table if not exists public.properties (
 create table if not exists public.sponsors (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null references auth.users(id) on delete restrict,
-  business_name text not null check (length(trim(business_name)) > 0),
-  category text not null,
-  website_url text not null check (website_url ~ '^https?://'),
   active boolean not null default false,
   approved boolean not null default false,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  created_at timestamptz not null default now()
 );
 
-create table if not exists public.property_sponsors (
-  property_id uuid not null references public.properties(id) on delete cascade,
-  sponsor_id uuid not null references public.sponsors(id) on delete cascade,
-  created_at timestamptz not null default now(),
-  primary key (property_id, sponsor_id)
+create table if not exists public.sponsors (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid not null references auth.users(id) on delete restrict,
+  name text not null,
+  active boolean not null default false,
+  approved boolean not null default false,
+  created_at timestamptz not null default now()
 );
 
 create table if not exists public.inquiries (
