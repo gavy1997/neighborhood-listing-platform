@@ -111,15 +111,12 @@ create policy "Owners can update unapproved properties"
   );
 
 -- Public sponsor visibility requires both active and approved status.
-drop policy if exists "Public can read active approved sponsors" on public.sponsors;
-create policy "Public can read active approved sponsors"
-  on public.sponsors for select to anon, authenticated
-  using (active = true and approved = true);
-
-drop policy if exists "Sponsors can read their own records" on public.sponsors;
-create policy "Sponsors can read their own records"
-  on public.sponsors for select to authenticated
-  using (owner_id = (select auth.uid()));
+drop policy if exists "Owners can update their own unapproved sponsors" on public.sponsors;
+create policy "Owners can update their own unapproved sponsors"
+  on public.sponsors for update to authenticated
+  using (
+    owner_id = (select auth.uid())
+  );
 
 drop policy if exists "Owners can create inactive unapproved sponsors" on public.sponsors;
 create policy "Owners can create inactive unapproved sponsors"
