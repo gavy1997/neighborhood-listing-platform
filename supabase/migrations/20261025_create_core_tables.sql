@@ -97,6 +97,9 @@ create policy "Owners can update their own unapproved properties"
   using (
     owner_id = (select auth.uid())
   );
+
+drop policy if exists "Owners can update unapproved properties" on public.properties;
+create policy "Owners can update unapproved properties"
   on public.properties for update to authenticated
   using (
     owner_id = (select auth.uid())
