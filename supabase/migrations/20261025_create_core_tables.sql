@@ -29,7 +29,7 @@ create table if not exists public.properties (
   updated_at timestamptz not null default now()
 );
 
-create table public.sponsors (
+create table if not exists public.sponsors (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null references auth.users(id) on delete restrict,
   business_name text not null check (length(trim(business_name)) > 0),
@@ -41,14 +41,14 @@ create table public.sponsors (
   updated_at timestamptz not null default now()
 );
 
-create table public.property_sponsors (
+create table if not exists public.property_sponsors (
   property_id uuid not null references public.properties(id) on delete cascade,
   sponsor_id uuid not null references public.sponsors(id) on delete cascade,
   created_at timestamptz not null default now(),
   primary key (property_id, sponsor_id)
 );
 
-create table public.inquiries (
+create table if not exists public.inquiries (
   id uuid primary key default gen_random_uuid(),
   property_id uuid not null references public.properties(id) on delete cascade,
   sender_id uuid not null references auth.users(id) on delete cascade,
