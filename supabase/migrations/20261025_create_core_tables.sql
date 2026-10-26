@@ -1,7 +1,7 @@
 -- Core tables for the neighborhood listings app.
 -- Admin changes are intended to use trusted server-side code.
 
-create table public.profiles (
+create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   display_name text,
   role text not null default 'property_professional'
@@ -9,7 +9,7 @@ create table public.profiles (
   created_at timestamptz not null default now()
 );
 
-create table public.properties (
+create table if not exists public.properties (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null references auth.users(id) on delete restrict,
   title text not null check (length(trim(title)) > 0),
