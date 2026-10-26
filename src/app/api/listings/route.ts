@@ -21,7 +21,8 @@ const PropertyInsertSchema = z
 
 function createUserClient(authorization?: string) {
   const url = process.env.SUPABASE_URL
-  const anonKey = process.env.SUPABASE_ANON_KEY
+  const anonKey =
+    process.env.SUPABASE_ANON_KEY ?? process.env.SUPABASE_PUBLISHABLE_KEY
 
   if (!url || !anonKey) {
     throw new Error('Supabase server configuration is missing.')
@@ -77,7 +78,10 @@ export async function POST(request: Request) {
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Request body must be valid JSON.' },
+      { status: 400 },
+    )
   }
 
   const parsed = PropertyInsertSchema.safeParse(body)
@@ -89,11 +93,15 @@ export async function POST(request: Request) {
   }
 
   try {
-    const supabase = createUserClient(authorization!)
-    const { data: authData, error: authError } = await supabase.auth.getUser(bearer[1])
+    const supabase = createUserClient(authorization)
+    const { data: authData, error: authError } =
+      await supabase.auth.getUser(bearer[1])
 
     if (authError || !authData.user) {
-      return NextResponse.json({ error: 'Sign-in is required.' }, { status: 401 })
+      return NextResponse.json(
+        { error: 'Sign-in is required.' },
+        { status: 401 },
+      )
     }
 
     const { data, error } = await supabase
