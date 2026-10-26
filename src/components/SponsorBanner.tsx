@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 import { getActiveSponsorForProperty } from '../actions/get-sponsor';
+=======
+import React from 'react';
+import type { Sponsor } from '../../types';
+
+>>>>>>> origin/main
 interface SponsorBannerProps {
   propertyId: string;
   targetZip: string;
