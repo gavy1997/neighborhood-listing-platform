@@ -1,28 +1,36 @@
-import React from 'react';
-import { Sponsor } from '../types';
-
+import { getActiveSponsorForProperty } from '../actions/get-sponsor';
 interface SponsorBannerProps {
-  sponsor: Sponsor;
+  propertyId: string;
+  targetZip: string;
 }
 
-export const SponsorBanner: React.FC<SponsorBannerProps> = ({ sponsor }) => {
-  return (
-    <aside aria-label="Sponsored Content" className="bg-amber-50 border border-amber-200 p-4 rounded-lg mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <div className="flex items-center gap-3">
-        <span className="bg-amber-200 text-amber-900 text-xs uppercase font-bold px-2 py-1 rounded">
-          Sponsored
-        </span>
-        <div>
-          <h2 className="text-base font-semibold text-gray-900">{sponsor.name}</h2>
-          <p className="text-sm text-gray-700">{sponsor.description}</p>
-        </div>
+export default async function SponsorBanner({ propertyId, targetZip }: SponsorBannerProps) {
+  const sponsor = await getActiveSponsorForProperty(propertyId, targetZip);
+
+  if (!sponsor) {
+    return (
+      <div className="text-sm text-stone-400 p-4 border border-dashed rounded-lg bg-stone-50">
+        Sponsorship slot available
       </div>
-      <a
-        href={sponsor.link}
-        className="inline-block text-center bg-amber-800 text-white text-sm font-medium py-1.5 px-3 rounded hover:bg-amber-900 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2 shrink-0"
+    );
+  }
+
+  return (
+    <div className="border border-stone-200 rounded-lg p-4 bg-stone-50 shadow-sm">
+      <span className="text-xs font-semibold tracking-wider text-stone-500 uppercase">
+        Sponsored Partner
+      </span>
+      <h3 className="text-lg font-medium text-stone-900 mt-1">
+        {sponsor.company_name}
+      </h3>
+      <a 
+        href={sponsor.destination_url} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="mt-3 inline-block w-full text-center bg-stone-900 text-white text-sm font-medium py-2 rounded hover:bg-stone-800 transition"
       >
         Learn More
       </a>
-    </aside>
+    </div>
   );
-};
+}
