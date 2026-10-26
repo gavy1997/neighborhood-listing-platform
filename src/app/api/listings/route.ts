@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '../../../lib/supabase-server';
+=======
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -37,6 +41,7 @@ function createUserClient(authorization?: string) {
     },
   })
 }
+>>>>>>> origin/main
 
 export async function GET() {
   try {
