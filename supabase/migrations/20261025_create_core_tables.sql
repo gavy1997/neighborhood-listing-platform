@@ -37,6 +37,7 @@ create table if not exists public.sponsors (
   approved boolean not null default false,
   created_at timestamptz not null default now()
 );
+);
 39  
 40  create table if not exists public.sponsors (
   id uuid primary key default gen_random_uuid(),
