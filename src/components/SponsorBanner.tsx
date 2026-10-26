@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sponsor } from '../types';
+import type { Sponsor } from '../../types';
 
 interface SponsorBannerProps {
   sponsor: Sponsor;
