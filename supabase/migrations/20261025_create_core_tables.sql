@@ -79,6 +79,7 @@ create policy "Users can create a basic own profile"
 
 -- Anyone can read approved listings. Owners can also read their own listings.
 drop policy if exists "Public can read approved properties" on public.properties;
+create policy "Public can read approved properties"
   on public.properties for select to anon, authenticated
   using (approved = true);
 
