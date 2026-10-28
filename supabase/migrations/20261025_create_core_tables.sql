@@ -70,7 +70,6 @@ create table if not exists public.sponsors (
     created_at timestamptz not null default now()
 );
 
-
 alter table public.sponsors enable row level security;
 
 drop policy if exists "Public can read active approved sponsors" on public.sponsors;
