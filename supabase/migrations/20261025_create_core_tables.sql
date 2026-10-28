@@ -72,10 +72,11 @@ create table if not exists public.sponsors (
 
 alter table public.sponsors enable row level security;
 
-drop policy if exists "Public can read active approved sponsors" on public.sponsors;
-create policy "Public can read active approved sponsors"
-  on public.sponsors for select to anon, authenticated
-  using (approved = true);
+drop policy if exists "Public can read sponsors" on public.sponsors;
+create policy "Public can read sponsors"
+  on public.sponsors for select
+  to anon, authenticated
+  using (true);
 
 drop policy if exists "Sponsors can read their own records" on public.sponsors;
 create policy "Sponsors can read their own records"
