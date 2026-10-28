@@ -98,7 +98,9 @@ create policy "Owners can update their own unapproved sponsors"
     owner_id = (select auth.uid())
   );
 
+https://github.com/gavy1997/neighborhood-listing-platform/pull/17#issue-6034486299
 
+  
 -- 4. Property Sponsors Junction Table
 create table if not exists public.property_sponsors (
   id uuid primary key default gen_random_uuid(),
