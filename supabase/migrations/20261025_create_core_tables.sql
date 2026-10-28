@@ -98,8 +98,6 @@ create policy "Owners can update their own unapproved sponsors"
     owner_id = (select auth.uid())
   );
 
-alter table public.sponsors enable row level security;
-
 
 -- 4. Property Sponsors Junction Table
 create table if not exists public.property_sponsors (
