@@ -62,13 +62,15 @@ create policy "Owners can update their own unapproved properties"
 
 -- 3. Sponsors Table
 create table if not exists public.sponsors (
-    id uuid primary key default gen_random_uuid(),
-    owner_id uuid not null references auth.users(id) on delete restrict,
-    name text not null,
-    active boolean not null default false,
-    approved boolean not null default false,
-    created_at timestamptz not null default now()
+    id uuid primary key default gen_random_uuid()
 );
+
+-- Ensure all required columns exist even if the table was created previously
+alter table public.sponsors add column if not exists owner_id uuid references auth.users(id) on delete restrict;
+alter table public.sponsors add column if not exists name text;
+alter table public.sponsors add column if not exists active boolean not null default false;
+alter table public.sponsors add column if not exists approved boolean not null default false;
+alter table public.sponsors add column if not exists created_at timestamptz not null default now();
 
 alter table public.sponsors enable row level security;
 
