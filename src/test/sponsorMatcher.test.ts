@@ -1,4 +1,6 @@
-import { selectSponsor, SponsorCandidate, MatchingContext, HOUSE_FALLBACK_SPONSOR } from '../lib/sponsorMatcher';
+import { describe, expect, test } from 'vitest'
+import { selectSponsor } from '../lib/sponsorMatcher'
+import type { MatchingContext, SponsorCandidate } from '../lib/sponsorMatcher'
 
 describe('Contextual Sponsor Matching Engine', () => {
   const mockContext: MatchingContext = {
