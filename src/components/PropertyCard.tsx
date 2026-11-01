@@ -46,6 +46,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, onFavorite
     </article>
   );
 };
+
 import Image from 'next/image';
 
 export default function PropertyCard({ property }) {
