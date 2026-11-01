@@ -31,3 +31,15 @@ App (or Page)
         ├── Facts List (ul > li)
         └── CTA Link/Button ("View Details for [Property Name]")
 Lab 1 submission sync update
+## 🛡️ Content Correction Procedure & Media Metrics (Lab 7)
+
+### Content Correction Protocol
+If unapproved, inaccurate, or non-compliant marketing copy reaches production:
+1. **Immediate Revocation:** The governance lead sets `status: "revoked"` in `src/data/copy-approved.json`.
+2. **Fallback Execution:** The application falls back to displaying the verified base brand details (`Aster Corp — Workshop Registration`).
+3. **Audit Log & Re-evaluation:** The incident is logged in `docs/AI_COLLABORATION_LOG.md` with the corrective prompt action taken.
+
+### Asset Performance Metrics
+- **Raw Asset:** `public/asset/raw/aster-logo-orig.png`
+- **Optimized Asset:** `public/asset/optimized/aster-logo-1x1.webp`
+- **Format:** WebP format provides optimal visual quality with reduced payload size, improving page load efficiency and Largest Contentful Paint (LCP) performance.

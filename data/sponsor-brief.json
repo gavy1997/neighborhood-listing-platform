@@ -1,0 +1,14 @@
+{
+    "business_name": "Aster Corp",
+    "approved_offer": "10% off workshop registration",
+    "address": "123 Innovation Way, Los Angeles, CA",
+    "dates": "Valid Nov 1, 2026 - Nov 15, 2026",
+    "landing_page_url": "https://example.com/workshop",
+    "prohibited_wording": [
+      "best",
+      "guarantee",
+      "act now",
+      "limited time only",
+      "hurry"
+    ]
+  }
