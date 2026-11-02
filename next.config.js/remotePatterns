@@ -1,5 +1,6 @@
-/** @type {import('next').NextjsConfig} */
 const nextConfig = {
+  // Remove or comment out this line:
+  // output: 'export',
   images: {
     remotePatterns: [
       {
@@ -11,5 +12,3 @@ const nextConfig = {
     ],
   },
 };
-
-module.exports = nextConfig;
