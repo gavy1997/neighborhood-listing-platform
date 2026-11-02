@@ -1,5 +1,5 @@
 const nextConfig = {
-  // Remove or comment out this line:
+  // Ensure this line is removed or commented out:
   // output: 'export',
   images: {
     remotePatterns: [
