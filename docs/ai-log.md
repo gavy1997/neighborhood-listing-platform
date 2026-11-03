@@ -56,3 +56,12 @@
 - Implemented Zod schema parsing in `src/lib/api.ts`.
 - Structured directory hierarchy (`src/lib/` and `src/test/`) and verified native TypeScript execution via `tsx`.
 - Verified JSON schema validation using `node scripts/validate.js`.
+## Midterm Practical Exam — Initial Requirements Draft
+
+- **Tool:** ChatGPT
+- **Prompt:** “Please explain these two assignments, and let's do them for this class for Rahim Islam step by step.” The exam instructions were provided as context.
+- **Output used:** The three user stories, acceptance criteria, estimates, traceability paths, and open questions in `docs/requirements.md`.
+- **Output rejected / rationale:** No implementation or security claims are accepted without checking the migration, routes, and test results. The district/coverage-zone and booking-policy details remain open questions because the instructions do not fully define them.
+- **Verification:** Compared the stories with the three stakeholder roles and requirements in the exam instructions; recorded unresolved schema questions in `docs/requirements.md`.
+- **Associated commit:** Pending.
+- **Other AI tools:** Gemini and Google AI Studio have not been used for this draft.
