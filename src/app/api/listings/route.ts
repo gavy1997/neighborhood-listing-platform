@@ -133,3 +133,94 @@ export async function POST(request: Request) {
     )
   }
 }
+import { NextResponse } from 'next/server';
+import { createServiceSchema } from '@/schemas/service';
+import { createClient } from '@supabase/supabase-js';
+
+// Client initialization using standard user authorization contexts
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+export async function GET() {
+  try {
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    // Fetch approved services selecting public fields only
+    const { data: services, error } = await supabase
+      .from('services')
+      .select('id, title, hourly_rate, duration_minutes, coverage_radius_miles')
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ data: services }, { status: 200 });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: 'Internal Server Error', details: err.message },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader) {
+      return NextResponse.json({ error: 'Unauthorized: Missing Authorization header' }, { status: 401 });
+    }
+
+    const body = await request.json();
+
+    // 1. Runtime schema validation using strict Zod contract
+    const validationResult = createServiceSchema.safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Bad Request: Invalid or unexpected payload',
+          details: validationResult.error.flatten().fieldErrors,
+        },
+        { status: 400 }
+      );
+    }
+
+    // 2. Authenticated user Supabase instance
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized user session' }, { status: 401 });
+    }
+
+    // 3. Insertion with parameterization & status defaulting to draft
+    const { data: newService, error: dbError } = await supabase
+      .from('services')
+      .insert([
+        {
+          provider_id: user.id,
+          title: validationResult.data.title,
+          hourly_rate: validationResult.data.hourly_rate,
+          duration_minutes: validationResult.data.duration_minutes,
+          coverage_radius_miles: validationResult.data.coverage_radius_miles,
+          status: 'draft',
+        },
+      ])
+      .select()
+      .single();
+
+    if (dbError) {
+      return NextResponse.json({ error: dbError.message }, { status: 400 });
+    }
+
+    return NextResponse.json({ data: newService }, { status: 201 });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: 'Internal Server Error', details: err.message },
+      { status: 500 }
+    );
+  }
+}
