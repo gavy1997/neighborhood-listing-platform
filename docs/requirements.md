@@ -1,8 +1,54 @@
-# AI Provenance Journal
+# Local Merchant Services and Appointment Booking Requirements
 
-| Step / Tool | Prompt Summary | Model Output Used | Model Output Rejected & Rationale | Verification Method | Associated Git Commit |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Part 3: DDL Architecture** | "Generate Supabase PostgreSQL migration for profiles, categories, services, category_mappings, and bookings with strict FK and CHECK constraints." | Table schemas, UUID defaults, `CHECK` regex rules for email and slug, and timestamp triggers. | Rejected inline foreign key definitions without `ON DELETE CASCADE/RESTRICT` rules. explicit foreign key rules prevent orphaned records. | Executed migration via `supabase db push` and verified zero schema errors in Supabase Dashboard. | `a1b2c3d` |
-| **Part 4: RLS Security** | "Create Supabase RLS policies for default-deny access on services and bookings with role-based restrictions." | RLS policy definitions for public approved queries and provider-specific draft access. | Rejected permissive policy allowing providers to update services when `status = 'approved'`. Modified to restrict edits to `draft` and `suspended` states. | Attempted unauthorized SQL `UPDATE` queries under simulated `anon` and `provider` JWTs. | `e4f5g6h` |
-| **Part 5: Data Contract** | "Generate Zod validation schema for POST /api/services route handler with strict input sanitization." | `.strict()` object schema matching title, hourly_rate, duration_minutes, and radius parameters. | Rejected standard `.passthrough()` Zod object; strictly enforced `.strict()` to reject untrusted payload properties. | Tested POST endpoint with payload containing unexpected `is_admin` key; verified HTTP 400 response. | `i7j8k9l` |
-| **Part 6: Accessible UI** | "Create ServiceCard Next.js component using semantic HTML and Tailwind grid rules." | Semantic `<article>`, `<header>`, `<ul>` markup with Tailwind `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`. | Rejected default `<div>` button wrappers. Enforced native `<button>` tags with explicit `aria-label` attributes for accessibility. | Tested complete UI flow using Keyboard (`Tab` / `Space` / `Enter`) and macOS VoiceOver. | `m0n1o2p` |
+## Scope and assumptions
+
+This exam slice supports local service providers, neighborhood clients, and platform administrators. A provider-created service starts as a draft and must be approved before public display. Booking requests are accepted, but clients cannot read other clients' bookings.
+
+The exam specifies active service categories and coverage radius, but does not fully define how neighborhood districts or coverage zones are stored. Those details need confirmation before they can be implemented precisely.
+
+## Story 1: Provider submits a service draft
+
+**User story:** As an authenticated service provider, I want to submit a service listing with an hourly rate so that clients can request appointments after an administrator approves it.
+
+**Estimate:** Medium
+
+**Acceptance criteria:**
+
+- **Given** an authenticated provider and a valid service payload, **when** the provider submits the service, **then** the service is saved with `status = 'draft'` and `provider_id` equal to the authenticated user's ID.
+- **Given** a service payload with a title shorter than five characters, a negative rate, an invalid duration, or an unknown field, **when** the provider submits it, **then** the API returns HTTP 400 and does not insert the service.
+
+**Traceability:** `supabase/migrations/20261029140000_exam_services_persistence.sql`; `src/schemas/service.ts`; `app/api/services/route.ts`.
+
+## Story 2: Client browses and requests a service
+
+**User story:** As a neighborhood client, I want to browse approved local services and request an appointment without seeing other clients' booking details.
+
+**Estimate:** Large
+
+**Acceptance criteria:**
+
+- **Given** an anonymous visitor, **when** they request the services list, **then** the response includes only services with `status = 'approved'` and only public service fields.
+- **Given** a visitor submits a booking request with a valid service, email, date, and notes, **when** the request is accepted, **then** a booking is created.
+- **Given** a client requests booking records, **when** they try to read bookings, **then** they cannot see bookings or contact information belonging to other clients.
+
+**Traceability:** `supabase/migrations/20261029140000_exam_services_persistence.sql`; `app/api/services/route.ts`; booking access rules in `docs/security-audit.md`. A dedicated booking route is not listed in the exam's required route files and needs confirmation.
+
+## Story 3: Administrator reviews services and bookings
+
+**User story:** As a platform administrator, I want to approve or suspend services and review bookings so that I can oversee service quality and address misuse.
+
+**Estimate:** Large
+
+**Acceptance criteria:**
+
+- **Given** an authenticated administrator, **when** they approve a draft service, **then** its status changes to `approved` and it becomes available through the public services query.
+- **Given** an administrator, **when** they review bookings for a service, **then** they can see bookings associated with that service.
+- **Given** a non-admin user, **when** they attempt an administrator action or read another user's booking, **then** the request is denied by server authorization or RLS.
+
+**Traceability:** `supabase/migrations/20261029140000_exam_services_persistence.sql`; administrator and booking policies in `docs/security-audit.md`; server-side route authorization.
+
+## Questions to confirm
+
+1. How are neighborhood districts and active coverage zones represented? The required schema includes `coverage_radius_miles` and active categories but no district or zone table.
+2. Should a booking be allowed for an unapproved or suspended service? The requirements imply bookings should be for approved services.
+3. Does “admin elevated service execution” mean a server-only service-role client, or a custom admin role checked through `profiles`?

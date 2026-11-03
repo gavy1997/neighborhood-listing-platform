@@ -56,11 +56,12 @@
 - Implemented Zod schema parsing in `src/lib/api.ts`.
 - Structured directory hierarchy (`src/lib/` and `src/test/`) and verified native TypeScript execution via `tsx`.
 - Verified JSON schema validation using `node scripts/validate.js`.
-# AI Provenance Journal
+## Midterm Practical Exam — Initial Requirements Draft
 
-| Step / Tool | Prompt Summary | Model Output Used | Model Output Rejected & Rationale | Verification Method | Associated Git Commit |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Part 3: DDL Architecture** | "Generate Supabase PostgreSQL migration for profiles, categories, services, category_mappings, and bookings with strict FK and CHECK constraints." | Table schemas, UUID defaults, `CHECK` regex rules for email and slug, and timestamp triggers. | Rejected inline foreign key definitions without `ON DELETE CASCADE/RESTRICT` rules. explicit foreign key rules prevent orphaned records. | Executed migration via `supabase db push` and verified zero schema errors in Supabase Dashboard. | `a1b2c3d` |
-| **Part 4: RLS Security** | "Create Supabase RLS policies for default-deny access on services and bookings with role-based restrictions." | RLS policy definitions for public approved queries and provider-specific draft access. | Rejected permissive policy allowing providers to update services when `status = 'approved'`. Modified to restrict edits to `draft` and `suspended` states. | Attempted unauthorized SQL `UPDATE` queries under simulated `anon` and `provider` JWTs. | `e4f5g6h` |
-| **Part 5: Data Contract** | "Generate Zod validation schema for POST /api/services route handler with strict input sanitization." | `.strict()` object schema matching title, hourly_rate, duration_minutes, and radius parameters. | Rejected standard `.passthrough()` Zod object; strictly enforced `.strict()` to reject untrusted payload properties. | Tested POST endpoint with payload containing unexpected `is_admin` key; verified HTTP 400 response. | `i7j8k9l` |
-| **Part 6: Accessible UI** | "Create ServiceCard Next.js component using semantic HTML and Tailwind grid rules." | Semantic `<article>`, `<header>`, `<ul>` markup with Tailwind `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`. | Rejected default `<div>` button wrappers. Enforced native `<button>` tags with explicit `aria-label` attributes for accessibility. | Tested complete UI flow using Keyboard (`Tab` / `Space` / `Enter`) and macOS VoiceOver. | `m0n1o2p` |
+- **Tool:** ChatGPT
+- **Prompt:** “Please explain these two assignments, and let's do them for this class for Rahim Islam step by step.” The exam instructions were provided as context.
+- **Output used:** The three user stories, acceptance criteria, estimates, traceability paths, and open questions in `docs/requirements.md`.
+- **Output rejected / rationale:** No implementation or security claims are accepted without checking the migration, routes, and test results. The district/coverage-zone and booking-policy details remain open questions because the instructions do not fully define them.
+- **Verification:** Compared the stories with the three stakeholder roles and requirements in the exam instructions; recorded unresolved schema questions in `docs/requirements.md`.
+- **Associated commit:** Pending.
+- **Other AI tools:** Gemini and Google AI Studio have not been used for this draft.

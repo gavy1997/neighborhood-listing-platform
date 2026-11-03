@@ -34,8 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-node_modules/
+
+# Midterm secrets and build output
 .env
-.env*.local
-dist/
-.next/
+/dist/
