@@ -38,3 +38,8 @@ next-env.d.ts
 # Midterm secrets and build output
 .env
 /dist/
+node_modules/
+.env
+.env*.local
+dist/
+.next/

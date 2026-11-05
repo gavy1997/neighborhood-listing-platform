@@ -69,3 +69,57 @@ export const ServiceGrid: React.FC<{ services: ServiceCardProps[] }> = ({ servic
     </section>
   );
 };
+
+import React from 'react';
+
+export interface ServiceCardProps {
+  id: string;
+  title: string;
+  hourlyRate: number;
+  durationMinutes: number;
+  coverageRadiusMiles: number;
+  onBook?: (id: string) => void;
+}
+
+export const ServiceCard: React.FC<ServiceCardProps> = ({
+  id,
+  title,
+  hourlyRate,
+  durationMinutes,
+  coverageRadiusMiles,
+  onBook,
+}) => {
+  return (
+    <article className="flex flex-col justify-between rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+      <header className="mb-4">
+        <h3 className="text-xl font-bold tracking-tight text-gray-900">
+          {title}
+        </h3>
+      </header>
+
+      <ul className="mb-6 space-y-2 text-sm text-gray-600">
+        <li className="flex justify-between border-b border-gray-100 pb-1">
+          <span className="font-medium text-gray-700">Hourly Rate:</span>
+          <span>${hourlyRate.toFixed(2)}/hr</span>
+        </li>
+        <li className="flex justify-between border-b border-gray-100 pb-1">
+          <span className="font-medium text-gray-700">Duration:</span>
+          <span>{durationMinutes} mins</span>
+        </li>
+        <li className="flex justify-between pb-1">
+          <span className="font-medium text-gray-700">Coverage Radius:</span>
+          <span>{coverageRadiusMiles} miles</span>
+        </li>
+      </ul>
+
+      <button
+        type="button"
+        onClick={() => onBook?.(id)}
+        aria-label={`Book appointment for ${title}`}
+        className="w-full rounded-md bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors"
+      >
+        Book Now
+      </button>
+    </article>
+  );
+};

@@ -18,3 +18,15 @@ export const createServiceSchema = z.object({
 }).strict(); // Strictly reject unallowed keys
 
 export type CreateServiceInput = z.infer<typeof createServiceSchema>;
+
+import { z } from 'zod';
+
+export const serviceContractSchema = z.object({
+  title: z.string().min(5, { message: "Title must be at least 5 characters long." }),
+  hourly_rate: z.number().min(0, { message: "Hourly rate cannot be negative." }),
+  duration_minutes: z.number().int().min(15, { message: "Duration must be an integer of at least 15 minutes." }),
+  coverage_radius_miles: z.number().int().positive({ message: "Coverage radius must be a positive integer." }),
+  status: z.enum(['draft', 'pending', 'approved', 'suspended']).optional().default('draft')
+}).strict(); // Strictly disallows unrecognized extra properties
+
+export type ServiceContractInput = z.infer<typeof serviceContractSchema>;
