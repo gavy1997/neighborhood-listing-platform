@@ -52,3 +52,47 @@ The exam specifies active service categories and coverage radius, but does not f
 1. How are neighborhood districts and active coverage zones represented? The required schema includes `coverage_radius_miles` and active categories but no district or zone table.
 2. Should a booking be allowed for an unapproved or suspended service? The requirements imply bookings should be for approved services.
 3. Does “admin elevated service execution” mean a server-only service-role client, or a custom admin role checked through `profiles`?
+
+# Product Requirements & Acceptance Criteria (Local Services & Bookings Subsystem)
+
+## User Stories & Traceability Matrix
+
+### Story 1: Service Provider / Merchant Listing Creation
+* **Role**: Service Provider / Merchant
+* **Goal**: Submit service listing drafts with hourly rates, duration, and coverage radius so clients can book appointments once verified.
+* **Scope Estimate**: Medium
+* **Traceability Link**: `supabase/migrations/20261029140000_exam_services_persistence.sql` (`services` table) | `app/api/services/route.ts` (`POST`)
+
+#### Acceptance Criteria
+* **Given** an authenticated merchant provider,
+* **When** submitting a service offering payload with a valid title (>= 5 chars), rate (>= 0), duration (>= 15 mins), and radius (> 0),
+* **Then** the record is stored in `services` with `status = 'draft'` and `provider_id = auth.uid()`.
+
+---
+
+### Story 2: Neighborhood Client / Resident Service Discovery & Anonymous Booking
+* **Role**: Neighborhood Client / Resident
+* **Goal**: Browse approved services by district and submit appointment bookings without viewing other client details.
+* **Scope Estimate**: Medium
+* **Traceability Link**: `app/api/services/route.ts` (`GET`) | `src/components/ServiceCard.tsx` | `services` & `bookings` RLS policies
+
+#### Acceptance Criteria
+* **Given** an anonymous neighborhood visitor,
+* **When** querying service offerings,
+* **Then** only listings with `status = 'approved'` and active categories are returned.
+* **Given** a client requesting a service,
+* **When** submitting a booking request with email, requested date, and notes,
+* **Then** the booking persists successfully, but client remains unable to read bookings submitted by others.
+
+---
+
+### Story 3: Platform Administrator Oversight
+* **Role**: Platform Administrator
+* **Goal**: Maintain full administrative oversight to review, approve, or deactivate listings and audit bookings.
+* **Scope Estimate**: Small
+* **Traceability Link**: `profiles` RLS policy (`role = 'admin'`) | `bookings` policy
+
+#### Acceptance Criteria
+* **Given** an authenticated administrator,
+* **When** querying or modifying any record across `services`, `bookings`, or `profiles`,
+* **Then** access is granted unconditionally through full administrative policies.
