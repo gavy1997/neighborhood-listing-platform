@@ -1,3 +1,4 @@
+'use client';
 import SponsorBanner from '../components/SponsorBanner';
 import ListingCard from '../components/ListingCard';
 
