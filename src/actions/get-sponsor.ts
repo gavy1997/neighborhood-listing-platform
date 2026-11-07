@@ -33,12 +33,13 @@ export async function getActiveSponsorForProperty(propertyId: string, targetZip:
 
   const supabase = createPublicClient();
 
-  const { data, error } = await supabase
-  .from('sponsors')
-  .select('id, company_name, destination_url')
-  .eq('property_id', validatedPropertyId) // Replace with your actual table column name
-  .eq('target_zip', validatedZip)
-  .eq('is_active', true)
+const { data, link, error: linkError } = await supabase
+  .from('property_sponsors')
+  .select('sponsors!inner(id, business_name, ...)')
+  .eq('property_id', parsedId.data)
+  .eq('sponsors.active', true)
+  .eq('sponsors.approved', true)
+  .limit(1)
   .maybeSingle();
 
   if (error) {
