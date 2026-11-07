@@ -4,8 +4,6 @@ import SponsorBanner from '../components/SponsorBanner';
 import ListingCard from '../components/ListingCard';
 
 export default function HomePage() {
-  // ... rest of your code
-}
   return (
     <main className="min-h-screen bg-stone-100 p-8 flex flex-col items-center justify-center">
       <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-md space-y-6">
@@ -22,3 +20,4 @@ export default function HomePage() {
       </div>
     </main>
   );
+}
