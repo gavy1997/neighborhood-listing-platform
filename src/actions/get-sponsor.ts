@@ -1,3 +1,4 @@
+ (import { PropertyIdSchema, ZipSchema } from '@/schemas/validation';)
 import { createClient } from '@supabase/supabase-js';
 import { PropertyIdSchema, ZipSchema } from '@/schemas/validation'; // Adjust path if needed based on your project
 
