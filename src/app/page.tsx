@@ -1,7 +1,7 @@
-'use client';
-
 import SponsorBanner from '../components/SponsorBanner';
 import ListingCard from '../components/ListingCard';
+
+export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
   return (
