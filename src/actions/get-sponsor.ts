@@ -1,6 +1,9 @@
- (import { PropertyIdSchema, ZipSchema } from '@/schemas/validation';)
+import { PropertyIdSchema, ZipSchema } from '../schemas/validation';
 import { createClient } from '@supabase/supabase-js';
-import { PropertyIdSchema, ZipSchema } from '@/schemas/validation'; // Adjust path if needed based on your project
+=======
+import { PropertyIdSchema, ZipSchema } from '../schemas/validation';
+>>>>>>> ba24f33 (Refactor sponsor fetching and fix import path)
+import { createClient } from '@supabase/supabase-js';
 
 function createPublicClient() {
   return createClient(
