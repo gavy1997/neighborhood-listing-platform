@@ -33,10 +33,10 @@ export async function getActiveSponsorForProperty(propertyId: string, targetZip:
 
   const supabase = createPublicClient();
 
-  const { data, error } = await supabase
+const { data, error } = await supabase
     .from('sponsors')
     .select('id, company_name, destination_url')
-    .eq('property_id', validatedPropertyId)
+    .eq('YOUR_CORRECT_COLUMN_NAME', validatedPropertyId) // Replace with actual column name
     .eq('target_zip', validatedZip)
     .eq('is_active', true)
     .maybeSingle();
