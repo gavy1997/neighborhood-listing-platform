@@ -1,3 +1,13 @@
+import { createClient } from '@supabase/supabase-js';
+import { PropertyIdSchema, ZipSchema } from '@/schemas/validation'; // Adjust path if needed based on your project
+
+function createPublicClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+
 export async function getActiveSponsorForProperty(propertyId: string, targetZip: string) {
   const parsedId = PropertyIdSchema.safeParse(propertyId);
   const parsedZip = ZipSchema.safeParse(targetZip);
@@ -20,7 +30,7 @@ export async function getActiveSponsorForProperty(propertyId: string, targetZip:
         approved
       )
     `)
-    .eq('property_id', parsedId.data) // Matches your property reference column
+    .eq('property_id', parsedId.data)
     .eq('sponsors.is_active', true)
     .eq('sponsors.approved', true)
     .limit(1)
@@ -30,5 +40,5 @@ export async function getActiveSponsorForProperty(propertyId: string, targetZip:
     return null;
   }
 
-  return link.sponsors;
+  return Array.isArray(link.sponsors) ? link.sponsors[0] : link.sponsors;
 }
