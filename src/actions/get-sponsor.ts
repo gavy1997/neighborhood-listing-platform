@@ -36,7 +36,7 @@ export async function getActiveSponsorForProperty(propertyId: string, targetZip:
 const { data, error } = await supabase
     .from('sponsors')
     .select('id, company_name, destination_url')
-    .eq('YOUR_CORRECT_COLUMN_NAME', validatedPropertyId)
+    .eq('gavy1997's Project A-Aster', validatedPropertyId)
     .eq('target_zip', validatedZip)
     .eq('is_active', true)
     .maybeSingle();
