@@ -1,6 +1,6 @@
 import 'server-only';
 import { createClient } from '@supabase/supabase-js';
-import { z } from 'zod';
+import { PropertyIdSchema, ZipSchema } from '@/schemas/validation';
 
 const PropertyIdSchema = z.string().uuid();
 const ZipSchema = z.string().regex(/^[0-9]{5}(-[0-9]{4})?$/);
