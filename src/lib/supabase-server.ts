@@ -1,0 +1,17 @@
+import { createClient } from '@supabase/supabase-js';
+
+// Safe wrapper to prevent build-time crashes when environment variables are missing
+export function getSupabaseServerClient() {
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
+
+  if (!supabaseUrl) {
+    throw new Error('Missing environment variable: SUPABASE_URL or NEXT_PUBLIC_SUPABASE_URL');
+  }
+
+  if (!supabaseServiceKey) {
+    throw new Error('Missing environment variable: SUPABASE_SERVICE_ROLE_KEY');
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
