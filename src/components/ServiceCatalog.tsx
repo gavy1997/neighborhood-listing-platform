@@ -67,7 +67,6 @@ export default function ServiceCatalog() {
     const form = new FormData(event.currentTarget)
     const payload = {
       service_id: selectedService.id,
-      client_name: String(form.get('client_name') || ''),
       client_email: String(form.get('client_email') || ''),
       requested_date: String(form.get('requested_date') || ''),
       notes: String(form.get('notes') || ''),
@@ -137,14 +136,6 @@ export default function ServiceCatalog() {
           </h2>
 
           <form onSubmit={submitBooking}>
-            <label htmlFor="client_name">Your name</label>
-            <input
-              id="client_name"
-              name="client_name"
-              autoComplete="name"
-              maxLength={120}
-              required
-            />
 
             <label htmlFor="client_email">Email</label>
             <input

@@ -1,38 +1,45 @@
-import React from 'react';
-
-interface ServiceCardProps {
-  id: string;
-  title: string;
-  hourlyRate: number;
-  durationMinutes: number;
-  coverageRadiusMiles: number;
-  onBook: (id: string) => void;
+export interface Service {
+  id: string
+  title: string
+  hourly_rate: number
+  duration_minutes: number
+  coverage_radius_miles: number
 }
 
-export function ServiceCard({
-  id,
-  title,
-  hourlyRate,
-  durationMinutes,
-  coverageRadiusMiles,
-  onBook,
-}: ServiceCardProps) {
+interface ServiceCardProps {
+  service: Service
+  onBook: (service: Service) => void
+}
+
+export default function ServiceCard({ service, onBook }: ServiceCardProps) {
+  const titleId = `service-title-${service.id}`
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 flex flex-col justify-between">
-      <div>
-        <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-        <div className="space-y-1 text-sm text-gray-600 mb-4">
-          <p><span className="font-semibold">Rate:</span> ${hourlyRate}/hr</p>
-          <p><span className="font-semibold">Duration:</span> {durationMinutes} mins</p>
-          <p><span className="font-semibold">Coverage:</span> {coverageRadiusMiles} miles</p>
-        </div>
-      </div>
+    <article className="service-card" aria-labelledby={titleId}>
+      <header className="service-card__body">
+        <h2 id={titleId}>{service.title}</h2>
+      </header>
+
+      <ul className="service-card__details">
+        <li>
+          <strong>Hourly rate:</strong> ${service.hourly_rate.toFixed(2)}
+        </li>
+        <li>
+          <strong>Duration:</strong> {service.duration_minutes} minutes
+        </li>
+        <li>
+          <strong>Coverage radius:</strong> {service.coverage_radius_miles} miles
+        </li>
+      </ul>
+
       <button
-        onClick={() => onBook(id)}
-        className="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+        type="button"
+        className="service-card__button focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+        aria-label={`Request a booking for ${service.title}`}
+        onClick={() => onBook(service)}
       >
-        Book Now
+        Request a booking
       </button>
-    </div>
-  );
+    </article>
+  )
 }
