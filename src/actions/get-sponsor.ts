@@ -1,5 +1,5 @@
 import 'server-only';
-import { PropertyIdSchema, ZipSchema } from '@/schemas/validation';
+import { PropertyIdSchema, ZipSchema } from '../schemas/validation';
 import { createClient } from '@supabase/supabase-js';
 
 function createPublicClient() {
@@ -10,7 +10,6 @@ function createPublicClient() {
 }
 
 export async function getActiveSponsorForProperty(propertyId: string, targetZip: string) {
-  // Use the imported schemas directly
   const propIdResult = PropertyIdSchema.safeParse(propertyId);
   const zipResult = ZipSchema.safeParse(targetZip);
 
