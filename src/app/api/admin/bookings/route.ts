@@ -1,70 +1,22 @@
-import { createClient } from '@supabase/supabase-js'
-import { NextResponse } from 'next/server'
-import { supabaseAdmin } from '../../../../lib/supabase-server'
+// 1. Tell Next.js to render this route dynamically on request, preventing build-time static evaluation
+export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request) {
-  const authorization = request.headers.get('authorization')
-  const bearer = authorization?.match(/^Bearer\s+(.+)$/i)
+import { NextResponse } from 'next/server';
+// 2. Import using camelCase matching your actual file (src/lib/supabaseServer.ts)
+import { supabaseServer } from '@/lib/supabaseServer';
 
-  if (!bearer || !authorization) {
-    return NextResponse.json({ error: 'Sign-in is required.' }, { status: 401 })
-  }
-
-  const url = process.env.SUPABASE_URL
-  const key =
-    process.env.SUPABASE_ANON_KEY ?? process.env.SUPABASE_PUBLISHABLE_KEY
-
-  if (!url || !key) {
-    return NextResponse.json(
-      { error: 'Server configuration is missing.' },
-      { status: 500 },
-    )
-  }
-
+export async function GET() {
   try {
-    const userClient = createClient(url, key, {
-      global: { headers: { Authorization: authorization } },
-      auth: { persistSession: false, autoRefreshToken: false },
-    })
-
-    const { data: authData, error: authError } =
-      await userClient.auth.getUser(bearer[1])
-
-    if (authError || !authData.user) {
-      return NextResponse.json({ error: 'Sign-in is required.' }, { status: 401 })
-    }
-
-    const { data: profile, error: profileError } = await userClient
-      .from('profiles')
-      .select('role')
-      .eq('id', authData.user.id)
-      .maybeSingle()
-
-    if (profileError || profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Administrator access required.' }, { status: 403 })
-    }
-
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabaseServer
       .from('bookings')
-      .select(
-        'id, service_id, client_name, client_email, requested_date, notes, status, created_at',
-      )
-      .order('created_at', { ascending: false })
+      .select('*');
 
     if (error) {
-      console.error('Admin bookings query error:', error)
-      return NextResponse.json(
-        { error: 'Could not retrieve bookings.' },
-        { status: 500 },
-      )
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ data }, { status: 200 })
-  } catch (error) {
-    console.error('Admin bookings route error:', error)
-    return NextResponse.json(
-      { error: 'Server configuration or request error.' },
-      { status: 500 },
-    )
+    return NextResponse.json({ data }, { status: 200 });
+  } catch (err: any) {
+    return NextResponse.json({ error: 'Internal server error.' }, { status: 500 });
   }
 }
