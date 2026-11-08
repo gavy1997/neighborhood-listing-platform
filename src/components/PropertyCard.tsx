@@ -1,50 +1,32 @@
 import React from 'react';
-
-export interface Property {
-  id: string;
-  title: string;
-  address: string;
-  city: string;
-  price: number;
-  imageUrl: string;
-}
+import Image from 'next/image';
 
 interface PropertyCardProps {
-  property: Property;
-  onFavoriteToggle?: (id: string) => void;
+  property: {
+    id: string;
+    title: string;
+    imageUrl?: string;
+    price?: number;
+  };
 }
 
-export const PropertyCard: React.FC<PropertyCardProps> = ({ property, onFavoriteToggle }) => {
+export function PropertyCard({ property }: PropertyCardProps) {
   return (
-    <article className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
-      <img
-        src={property.imageUrl}
-        alt={`Property listing at ${property.address}, ${property.city}`}
-        className="w-full h-48 object-cover"
-      />
-
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900">
-          {property.title}
-        </h3>
-
-        <p className="text-sm text-gray-500">{property.address}, {property.city}</p>
-        <p className="mt-2 text-xl font-bold text-gray-900">${property.price.toLocaleString()}</p>
-
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (onFavoriteToggle) onFavoriteToggle(property.id);
-          }}
-          aria-label={`Save ${property.title} to favorites`}
-          className="mt-4 w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-        >
-          Favorite
-        </button>
-      </div>
-    </article>
+    <div className="border rounded-lg p-4 shadow-sm">
+      {property.imageUrl && (
+        <div className="relative w-full h-48 mb-2">
+          <Image 
+            src={property.imageUrl} 
+            alt={property.title} 
+            fill 
+            className="object-cover rounded-md" 
+          />
+        </div>
+      )}
+      <h3 className="font-bold text-lg">{property.title}</h3>
+      {property.price && <p className="text-gray-600">${property.price}</p>}
+    </div>
   );
-};
+}
 
 export default PropertyCard;

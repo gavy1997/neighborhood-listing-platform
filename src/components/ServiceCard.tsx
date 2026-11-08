@@ -1,50 +1,38 @@
-export interface Service {
-  id: string
-  title: string
-  description: string
-  neighborhood: string
-  coverage_radius_miles: number
-  price: number
-}
+import React from 'react';
 
 interface ServiceCardProps {
-  service: Service
-  onBook: (service: Service) => void
+  id: string;
+  title: string;
+  hourlyRate: number;
+  durationMinutes: number;
+  coverageRadiusMiles: number;
+  onBook: (id: string) => void;
 }
 
-export default function ServiceCard({ service, onBook }: ServiceCardProps) {
-  const titleId = `service-title-${service.id}`
-
+export function ServiceCard({
+  id,
+  title,
+  hourlyRate,
+  durationMinutes,
+  coverageRadiusMiles,
+  onBook,
+}: ServiceCardProps) {
   return (
-    <article className="service-card" aria-labelledby={titleId}>
-      <div className="service-card__body">
-        <h2 id={titleId}>{service.title}</h2>
-        <p>{service.description}</p>
-
-        <dl className="service-card__details">
-          <div>
-            <dt>Neighborhood</dt>
-            <dd>{service.neighborhood}</dd>
-          </div>
-          <div>
-            <dt>Coverage radius</dt>
-            <dd>{service.coverage_radius_miles} miles</dd>
-          </div>
-          <div>
-            <dt>Price</dt>
-            <dd>${service.price.toLocaleString()}</dd>
-          </div>
-        </dl>
-
-        <button
-          type="button"
-          className="service-card__button"
-          aria-label={`Request a booking for ${service.title}`}
-          onClick={() => onBook(service)}
-        >
-          Request a booking
-        </button>
+    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 flex flex-col justify-between">
+      <div>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+        <div className="space-y-1 text-sm text-gray-600 mb-4">
+          <p><span className="font-semibold">Rate:</span> ${hourlyRate}/hr</p>
+          <p><span className="font-semibold">Duration:</span> {durationMinutes} mins</p>
+          <p><span className="font-semibold">Coverage:</span> {coverageRadiusMiles} miles</p>
+        </div>
       </div>
-    </article>
-  )
+      <button
+        onClick={() => onBook(id)}
+        className="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+      >
+        Book Now
+      </button>
+    </div>
+  );
 }

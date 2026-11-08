@@ -3,7 +3,7 @@ const path = require('path');
 const Ajv = require('ajv');
 const addFormats = require('ajv-formats');
 
-const schemaPath = path.join(__dirname, '../schemas/property.schema.json');
+const schemaPath = path.join(__dirname, '../src/schemas/property.schema.json');
 const dataPath = path.join(__dirname, '../data/generated/synthetic_properties.json');
 
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'));

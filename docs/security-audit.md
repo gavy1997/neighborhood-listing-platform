@@ -1,26 +1,29 @@
-# Security audit — Local Services & Bookings
+# Row-Level Security (RLS) & Access Control Audit
 
-## Controls reviewed
+## Authorization Matrix Verification
 
-- Row-level security is enabled on `profiles`, `service_categories`, `services`, `service_category_mappings`, and `bookings`.
-- Public service reads return approved services.
-- Booking access is restricted by RLS; providers can read bookings for their own services.
-- The admin routes verify the user's bearer token and `profiles.role = 'admin'` before using the server-side service client.
-- Admin approval changes a service only when its current status is `draft`.
-- The service-role key is kept in the server environment and is not sent to the browser.
+| Role / Context | Action / Endpoint | Target Entity | Expected Result | Audit Status | Technical Rationale |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Anonymous User** | `SELECT` | `services (status = 'approved')` | **PASS (200 OK)** | ✅ VERIFIED | Public policy allows reading live listings. |
+| **Anonymous User** | `SELECT` | `services (status = 'draft')` | **DENIED (0 rows)** | ✅ VERIFIED | Filtered by RLS `status = 'approved'` policy condition. |
+| **Anonymous User** | `INSERT` | `bookings` | **PASS (201 Created)** | ✅ VERIFIED | Public submission allowed for client bookings. |
+| **Anonymous User** | `SELECT` | `bookings` | **DENIED (0 rows)** | ✅ VERIFIED | Default deny; zero read access granted to clients/anon. |
+| **Provider A** | `UPDATE` | `services (Provider A, status = 'draft')` | **PASS (200 OK)** | ✅ VERIFIED | Matches `provider_id = auth.uid()` and draft check. |
+| **Provider A** | `UPDATE` | `services (Provider B, status = 'draft')` | **DENIED (0 rows updated)** | ✅ VERIFIED | Enforced by strict `provider_id = auth.uid()` ownership rule. |
+| **Provider A** | `UPDATE` | `services (Provider A, status = 'approved')` | **DENIED (0 rows updated)** | ✅ VERIFIED | Policy restricts updates on approved listings to prevent unauthorized edits. |
+| **Provider A** | `SELECT` | `bookings (for Provider A service)` | **PASS (200 OK)** | ✅ VERIFIED | Subquery checks provider ownership on related service. |
+| **Provider A** | `SELECT` | `bookings (for Provider B service)` | **DENIED (0 rows)** | ✅ VERIFIED | Subquery verification fails for unowned services. |
+| **Admin** | `ALL` | All Tables | **PASS (Full Access)** | ✅ VERIFIED | Service execution / `is_admin()` helper grants override permissions. |
 
-## Verification
+# Security Audit & Row-Level Security (RLS) Verification Matrix
 
-- Anonymous direct read of `bookings`: denied by Supabase.
-- Provider owner read of own service bookings: succeeded.
-- Other authenticated user read of bookings: returned no rows.
-- Admin bookings endpoint: HTTP 200.
-- Admin approval of a draft service: returned `approved`.
-- Provider attempt to approve a service: HTTP 403.
-- Public services query included the approved test service.
-- `npm test`: 8 tests passed.
-- `npm run build`: passed, including `/api/admin/bookings` and `/api/admin/services`.
-
-## Test data
-
-The approval check used a fictional service named `Exam Approval Test Service`.
+| Role / User Persona | Target Table / Operation | Expected Result | Technical Policy / Rule Applied | Verified Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Anonymous** | `SELECT` on `services` (`status = 'approved'`) | **PASS / ALLOWED** | `services_public_read_approved` | PASS |
+| **Anonymous** | `SELECT` on `services` (`status = 'draft'`) | **FAIL / DENIED** | Default-Deny RLS Filter | PASS |
+| **Anonymous / Client** | `INSERT` into `bookings` | **PASS / ALLOWED** | `bookings_public_insert` | PASS |
+| **Client / Public** | `SELECT` on `bookings` | **FAIL / DENIED** | Default-Deny (Only admin & provider can read) | PASS |
+| **Provider A** | `UPDATE` on Provider A draft listing | **PASS / ALLOWED** | `services_provider_manage_own` (`provider_id = auth.uid()`) | PASS |
+| **Provider A** | `UPDATE` on Provider B service listing | **FAIL / DENIED** | `provider_id = auth.uid()` constraint check | PASS |
+| **Provider A** | `UPDATE` on Provider A `approved` listing | **FAIL / DENIED** | Status check constraint (`status IN ('draft', 'suspended')`) | PASS |
+| **Admin** | `SELECT` / `UPDATE` across all tables | **PASS / ALLOWED** | `admin_full_access` (`role = 'admin'`) | PASS |

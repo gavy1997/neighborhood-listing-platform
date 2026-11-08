@@ -43,3 +43,6 @@ If unapproved, inaccurate, or non-compliant marketing copy reaches production:
 - **Raw Asset:** `public/asset/raw/aster-logo-orig.png`
 - **Optimized Asset:** `public/asset/optimized/aster-logo-1x1.webp`
 - **Format:** WebP format provides optimal visual quality with reduced payload size, improving page load efficiency and Largest Contentful Paint (LCP) performance.
+
+## Live Deployment
+- Vercel URL: https://neighborhood-listing-platform-lime.vercel.app/

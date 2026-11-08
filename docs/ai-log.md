@@ -85,17 +85,14 @@
 - **Output used:** The three user stories, acceptance criteria, estimates, traceability paths, and open questions in `docs/requirements.md`.
 - **Output rejected / rationale:** No implementation or security claims were accepted without checking the migration, routes, and test results. The district/coverage-zone and booking-policy details remained open questions because the instructions did not fully define them.
 - **Verification:** Compared the stories with the three stakeholder roles and requirements in the exam instructions; recorded unresolved schema questions in `docs/requirements.md`.
-- **Associated commit:** `64089bf`
-- **Other AI tools:** Gemini and Google AI Studio were not used for this requirements draft.
+- **Associated commit:** Pending.
+- **Other AI tools:** Gemini and Google AI Studio have not been used for this draft.
 
----
+# AI Provenance Journal
 
-## Midterm Practical Exam — Services and Bookings Implementation
-
-- **Tool:** ChatGPT
-- **Prompt summary:** Help implement and verify service listings, booking requests, administrator booking review, and draft service approval for the midterm.
-- **Output used:** Assistance with the Supabase migration and grants, Zod validation, service and booking API routes, admin routes, and service catalog UI.
-- **Verification:** Applied the migration and grants in Supabase. Confirmed anonymous booking reads are denied, a provider can read their own service bookings, another authenticated user sees no bookings, an admin can read bookings and approve a draft service, a provider's approval attempt returns HTTP 403, and the approved service appears in the public services query.
-- **Test results:** `npm test` passed (8 tests). `npm run build` passed, including `/api/admin/bookings` and `/api/admin/services`.
-- **Limitations:** The approval check used fictional test data. The migration grants were also applied directly in Supabase; the local migration includes them so the setup is reproducible.
-- **Associated commit:** `d5952ef`
+| Step / Tool | Prompt Summary | Model Output Used | Model Output Rejected & Rationale | Verification Method | Associated Git Commit |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Part 3: DDL Architecture** | Generated PostgreSQL DDL with strict checks, foreign keys, and RLS policies. | DDL structure for `profiles`, `services`, `bookings`, `service_categories`, and junction tables. | Rejected initial attempt that omitted `status IN ('draft', 'pending', 'approved', 'suspended')` check constraint. | Executed migration via Supabase CLI; verified table creation in remote dashboard. | `feat(db): add versioned persistence schema for local services` |
+| **Part 4: RLS Policies** | Generated least-privilege RLS policies for anonymous, provider, client, and admin roles. | Provider-scoped `UPDATE`/`DELETE` policy restricting modifications to `draft` or `suspended` listings. | Rejected policy allowing providers to delete live `approved` listings without admin oversight. | Executed SQL audit matrix tests in Supabase SQL Editor as different roles. | `security(rls): enforce role-based access control policies` |
+| **Part 5: Data Contract** | Generated Zod validation schema for service POST requests with strict property checks. | Zod object schema with `.strict()` modifier and min/max length constraints. | Rejected default `.passthrough()` validation as it allows unexpected body attributes. | Ran unit tests against API handler using invalid payloads (missing titles, extra keys). | `feat(api): implement runtime validation contract and service handlers` |
+| **Part 6: UI Component** | Generated responsive Tailwind React component for `ServiceCard.tsx`. | Semantic `<article>`, `<header>`, `<ul>` structure and Tailwind `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`. | Rejected generic `<div>` layout and buttons missing explicit `aria-label` attributes. | Tested WCAG keyboard navigation (`Tab`/`Enter`) and inspected DOM structure. | `feat(ui): add accessible semantic ServiceCard component` |

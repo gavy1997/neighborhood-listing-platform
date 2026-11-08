@@ -1,76 +1,56 @@
-'use server'
+import 'server-only';
+import { createClient } from '@supabase/supabase-js';
+import { z } from 'zod';
 
-import { createClient } from '@supabase/supabase-js'
-import { z } from 'zod'
+const PropertyIdSchema = z.string().uuid();
+const ZipSchema = z.string().regex(/^[0-9]{5}(-[0-9]{4})?$/);
 
-const PropertyIdSchema = z.string().uuid()
-const ZipSchema = z.string().regex(/^[0-9]{5}(-[0-9]{4})?$/)
+export async function getActiveSponsorForProperty(propertyId: string, targetZip: string) {
+  const parsedId = PropertyIdSchema.safeParse(propertyId);
+  const parsedZip = ZipSchema.safeParse(targetZip);
 
-export interface Sponsor {
-  id: string
-  company_name: string
-  destination_url: string
-}
-
-function createPublicClient() {
-  const url = process.env.SUPABASE_URL
-  const key =
-    process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY
-
-  if (!url || !key) {
-    throw new Error('Supabase public configuration is missing.')
+  if (!parsedId.success || !parsedZip.success) {
+    return null;
   }
 
-  return createClient(url, key, {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+    process.env.SUPABASE_PUBLISHABLE_KEY ??
+    process.env.SUPABASE_ANON_KEY;
+
+  if (!url || !key) {
+    return null;
+  }
+
+  const supabase = createClient(url, key, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
     },
-  })
-}
+  });
 
-export async function getActiveSponsorForProperty(
-  propertyId: string,
-  targetZip: string,
-): Promise<Sponsor | null> {
-  const parsedId = PropertyIdSchema.safeParse(propertyId)
-  const parsedZip = ZipSchema.safeParse(targetZip)
+  const { data: link, error: linkError } = await supabase
+    .from('property_sponsors')
+    .select(`
+      property_id,
+      sponsors!inner (
+        id,
+        company_name,
+        destination_url,
+        is_active,
+        approved
+      )
+    `)
+    .eq('property_id', parsedId.data)
+    .eq('sponsors.is_active', true)
+    .eq('sponsors.approved', true)
+    .limit(1)
+    .maybeSingle();
 
-  if (!parsedId.success || !parsedZip.success) return null
-
-  try {
-    const supabase = createPublicClient()
-
-    const { data: property, error: propertyError } = await supabase
-      .from('properties')
-      .select('id, zip_code')
-      .eq('id', parsedId.data)
-      .eq('zip_code', parsedZip.data)
-      .eq('approved', true)
-      .maybeSingle()
-
-    if (propertyError || !property) return null
-
-    const { data: link, error: linkError } = await supabase
-      .from('property_sponsors')
-      .select('sponsors!inner(id, business_name, website_url)')
-      .eq('property_id', parsedId.data)
-      .eq('sponsors.active', true)
-      .eq('sponsors.approved', true)
-      .limit(1)
-      .maybeSingle()
-
-    if (linkError || !link?.sponsors) return null
-
-const sponsor = link.sponsors[0]
-if (!sponsor) return null
-
-    return {
-      id: sponsor.id,
-      company_name: sponsor.business_name,
-      destination_url: sponsor.website_url,
-    }
-  } catch {
-    return null
+  if (linkError || !link?.sponsors) {
+    return null;
   }
+
+  return link.sponsors[0] ?? null;
 }

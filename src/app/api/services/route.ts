@@ -1,154 +1,59 @@
-import { createClient } from '@supabase/supabase-js'
-import { NextResponse } from 'next/server'
-import { ServiceCreateSchema } from '../../../schemas/service'
+import { NextResponse } from 'next/server';
+import { supabaseServer } from '@/lib/supabaseServer';
+import { serviceContractSchema } from '@/schemas/service';
 
-function createUserClient(authorization?: string) {
-  const url = process.env.SUPABASE_URL
-  const key =
-    process.env.SUPABASE_ANON_KEY ?? process.env.SUPABASE_PUBLISHABLE_KEY
-
-  if (!url || !key) {
-    throw new Error('Supabase server configuration is missing.')
-  }
-
-  return createClient(url, key, {
-    ...(authorization
-      ? { global: { headers: { Authorization: authorization } } }
-      : {}),
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  })
-}
-
+// GET Handler: Retrieves approved public service listings
 export async function GET() {
   try {
-    const supabase = createUserClient()
-    const { data, error } = await supabase
+    const { data, error } = await supabaseServer
       .from('services')
-      .select(
-        'id, provider_id, title, description, neighborhood, coverage_radius_miles, price, status, created_at',
-      )
+      .select('id, title, hourly_rate, duration_minutes, coverage_radius_miles')
       .eq('status', 'approved')
-      .order('created_at', { ascending: false })
+      .order('created_at', { ascending: false });
 
     if (error) {
-      return NextResponse.json(
-        { error: 'Could not retrieve services.' },
-        { status: 500 },
-      )
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ data }, { status: 200 })
-  } catch {
-    return NextResponse.json(
-      { error: 'Server configuration or request error.' },
-      { status: 500 },
-    )
+    return NextResponse.json({ data }, { status: 200 });
+  } catch (err: any) {
+    return NextResponse.json({ error: 'Internal server error.' }, { status: 500 });
   }
 }
 
+// POST Handler: Validates payload and creates service draft
 export async function POST(request: Request) {
-  const authorization = request.headers.get('authorization')
-  const bearer = authorization?.match(/^Bearer\s+(.+)$/i)
-
-  if (!bearer) {
-    return NextResponse.json({ error: 'Sign-in is required.' }, { status: 401 })
-  }
-
-  let body: unknown
   try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { error: 'Request body must be valid JSON.' },
-      { status: 400 },
-    )
-  }
+    const body = await request.json();
 
-  const parsed = ServiceCreateSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Invalid service data.', details: parsed.error.issues },
-      { status: 400 },
-    )
-  }
+    // 1. Validate payload against strict Zod schema contract
+    const validationResult = serviceContractSchema.safeParse(body);
 
-  try {
-    const supabase = createUserClient(authorization ?? undefined)
-    const { data: authData, error: authError } =
-      await supabase.auth.getUser(bearer[1])
-
-    if (authError || !authData.user) {
-      return NextResponse.json({ error: 'Sign-in is required.' }, { status: 401 })
-    }
-
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', authData.user.id)
-      .maybeSingle()
-
-    if (profileError || profile?.role !== 'provider') {
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'A provider account is required to create a service.' },
-        { status: 403 },
-      )
+        {
+          error: 'Validation failed: Invalid request body structure or types.',
+          details: validationResult.error.flatten().fieldErrors,
+        },
+        { status: 400 }
+      );
     }
 
-    const { data: service, error: serviceError } = await supabase
+    const validPayload = validationResult.data;
+
+    // 2. Perform parameterized database insert via Supabase server client
+    const { data, error } = await supabaseServer
       .from('services')
-      .insert({
-        provider_id: authData.user.id,
-        title: parsed.data.title,
-        description: parsed.data.description,
-        neighborhood: parsed.data.neighborhood,
-        coverage_radius_miles: parsed.data.coverage_radius_miles,
-        price: parsed.data.price,
-        status: 'draft',
-      })
-      .select(
-        'id, provider_id, title, description, neighborhood, coverage_radius_miles, price, status, created_at',
-      )
-      .single()
+      .insert([validPayload])
+      .select()
+      .single();
 
-    if (serviceError || !service) {
-      return NextResponse.json(
-        { error: 'Could not create service.' },
-        { status: 403 },
-      )
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const mappings = parsed.data.category_ids.map((category_id) => ({
-      service_id: service.id,
-      category_id,
-    }))
-
-    const { error: mappingError } = await supabase
-      .from('service_category_mappings')
-      .insert(mappings)
-
-    if (mappingError) {
-      await supabase
-        .from('services')
-        .delete()
-        .eq('id', service.id)
-
-      return NextResponse.json(
-        { error: 'Could not assign the service categories.' },
-        { status: 400 },
-      )
-    }
-
-    return NextResponse.json(
-      { data: { ...service, category_ids: parsed.data.category_ids } },
-      { status: 201 },
-    )
-  } catch {
-    return NextResponse.json(
-      { error: 'Server configuration or request error.' },
-      { status: 500 },
-    )
+    return NextResponse.json({ data }, { status: 201 });
+  } catch (err: any) {
+    return NextResponse.json({ error: 'Invalid JSON body in request.' }, { status: 400 });
   }
 }
