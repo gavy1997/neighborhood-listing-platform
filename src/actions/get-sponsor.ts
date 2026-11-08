@@ -1,7 +1,28 @@
+
+import 'server-only';
 import { PropertyIdSchema, ZipSchema } from '../schemas/validation';
 import { createClient } from '@supabase/supabase-js';
 
-export async function getActiveSponsorForProperty(propertyId: string, targetZip: string) {
+function createPublicClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Missing Supabase environment variables.');
+  }
+
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+}
+
+export async function getActiveSponsorForProperty(
+  propertyId: string,
+  targetZip: string
+) {
   const parsedId = PropertyIdSchema.safeParse(propertyId);
   const parsedZip = ZipSchema.safeParse(targetZip);
 
@@ -29,9 +50,16 @@ export async function getActiveSponsorForProperty(propertyId: string, targetZip:
     .limit(1)
     .maybeSingle();
 
-  if (linkError || !link?.sponsors) {
+  if (linkError) {
+    console.error('Sponsor lookup failed:', linkError.message);
     return null;
   }
 
-  return Array.isArray(link.sponsors) ? link.sponsors[0] : link.sponsors;
+  if (!link?.sponsors) {
+    return null;
+  }
+
+  return Array.isArray(link.sponsors)
+    ? link.sponsors[0]
+    : link.sponsors;
 }
