@@ -9,7 +9,6 @@ on:
 jobs:
   release-gates:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -20,9 +19,15 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # 1. Production Build Gate
+      - name: Install Dependencies
+        run: npm ci
+
+      # Gate 2: Automated Test Suite
+      - name: Run Unit Tests
+        run: npm test
+
+      # Gate 1: Production Build Check
       - name: Run Type Check and Build
         run: |
-          npm ci
           npx tsc --noEmit
           npm run build
