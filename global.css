@@ -1,79 +1,142 @@
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f9fafb;
-  color: #111827;
-}
-
 * {
   box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #f9fafb;
+  color: #111827;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
 }
 
 main {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
-/* Form Styles */
-form {
-  background-color: #ffffff;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
-  margin-bottom: 1.5rem;
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.15;
 }
 
-/* Sponsor Banner */
-aside {
-  background-color: #fef3c7;
-  border: 1px solid #fde68a;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
+button,
+input,
+textarea {
+  font: inherit;
+}
+.service-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .service-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.service-card {
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
+}
+
+.service-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  height: 100%;
+}
+
+.service-card h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.service-card__details {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.service-card__details div {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  gap: 1rem;
 }
 
-/* Card Grid */
-.grid {
+.service-card__details dt {
+  font-weight: 600;
+}
+
+.service-card__details dd {
+  margin: 0;
+  text-align: right;
+}
+
+.service-card__button,
+.booking-panel button {
+  min-height: 44px;
+  padding: 0.65rem 1rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: #1d4ed8;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.service-card__button {
+  margin-top: auto;
+}
+
+.booking-panel {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
+.booking-panel form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 0.75rem;
 }
 
-article {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-article img {
+.booking-panel input,
+.booking-panel textarea {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  padding: 0.7rem;
+  border: 1px solid #6b7280;
+  border-radius: 0.35rem;
+  font: inherit;
 }
 
-.card-body {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+.booking-panel textarea {
+  min-height: 7rem;
+  resize: vertical;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+:focus-visible {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }

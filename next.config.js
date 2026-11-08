@@ -1,14 +1,14 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Ensure this line is removed or commented out:
-  // output: 'export',
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'gavy1997-project-a-aster.supabase.co',
-        port: '',
         pathname: '/storage/v1/object/public/**',
       },
     ],
   },
-};
+}
+
+module.exports = nextConfig
