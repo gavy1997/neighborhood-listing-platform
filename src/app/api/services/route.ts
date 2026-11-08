@@ -76,7 +76,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const supabase = createUserClient(authorization)
+    const supabase = createUserClient(authorization ?? undefined)
     const { data: authData, error: authError } =
       await supabase.auth.getUser(bearer[1])
 
