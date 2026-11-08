@@ -1,6 +1,9 @@
 import 'server-only';
 import { createClient } from '@supabase/supabase-js';
-import { PropertyIdSchema, ZipSchema } from '../schemas/validation';
+import { z } from 'zod';
+
+const PropertyIdSchema = z.string().uuid();
+const ZipSchema = z.string().regex(/^[0-9]{5}(-[0-9]{4})?$/);
 
 export async function getActiveSponsorForProperty(propertyId: string, targetZip: string) {
   const parsedId = PropertyIdSchema.safeParse(propertyId);
