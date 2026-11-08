@@ -1,65 +1,36 @@
-
 import 'server-only';
-import { PropertyIdSchema, ZipSchema } from '../schemas/validation';
+import { PropertyIdSchema, ZipSchema } from '@/schemas/validation';
 import { createClient } from '@supabase/supabase-js';
 
 function createPublicClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Missing Supabase environment variables.');
-  }
-
-  return createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  });
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 }
 
-export async function getActiveSponsorForProperty(
-  propertyId: string,
-  targetZip: string
-) {
-  const parsedId = PropertyIdSchema.safeParse(propertyId);
-  const parsedZip = ZipSchema.safeParse(targetZip);
+export async function getActiveSponsorForProperty(propertyId: string, targetZip: string) {
+  // Use the imported schemas directly
+  const propIdResult = PropertyIdSchema.safeParse(propertyId);
+  const zipResult = ZipSchema.safeParse(targetZip);
 
-  if (!parsedId.success || !parsedZip.success) {
-    return null;
+  if (!propIdResult.success || !zipResult.success) {
+    throw new Error('Invalid input parameters');
   }
 
   const supabase = createPublicClient();
 
-  const { data: link, error: linkError } = await supabase
-    .from('property_sponsors')
-    .select(`
-      property_id,
-      sponsors!inner (
-        id,
-        company_name,
-        destination_url,
-        is_active,
-        approved
-      )
-    `)
-    .eq('property_id', parsedId.data)
-    .eq('sponsors.is_active', true)
-    .eq('sponsors.approved', true)
-    .limit(1)
-    .maybeSingle();
+  const { data, error } = await supabase
+    .from('sponsors')
+    .select('*')
+    .eq('property_id', propertyId)
+    .eq('zip_code', targetZip)
+    .eq('is_active', true)
+    .single();
 
-  if (linkError) {
-    console.error('Sponsor lookup failed:', linkError.message);
+  if (error) {
     return null;
   }
 
-  if (!link?.sponsors) {
-    return null;
-  }
-
-  return Array.isArray(link.sponsors)
-    ? link.sponsors[0]
-    : link.sponsors;
+  return data;
 }
