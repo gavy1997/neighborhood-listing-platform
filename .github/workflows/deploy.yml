@@ -1,4 +1,4 @@
-name: Production Deployment Pipeline
+name: Production Release Gates Pipeline
 
 on:
   push:
