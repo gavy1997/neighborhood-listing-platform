@@ -85,7 +85,7 @@
 - **Output used:** The three user stories, acceptance criteria, estimates, traceability paths, and open questions in `docs/requirements.md`.
 - **Output rejected / rationale:** No implementation or security claims were accepted without checking the migration, routes, and test results. The district/coverage-zone and booking-policy details remained open questions because the instructions did not fully define them.
 - **Verification:** Compared the stories with the three stakeholder roles and requirements in the exam instructions; recorded unresolved schema questions in `docs/requirements.md`.
-- **Associated commit:** Pending.
+- **Associated commit:** `64089bf`
 - **Other AI tools:** Gemini and Google AI Studio were not used for this requirements draft.
 
 ---
@@ -97,5 +97,5 @@
 - **Output used:** Assistance with the Supabase migration and grants, Zod validation, service and booking API routes, admin routes, and service catalog UI.
 - **Verification:** Applied the migration and grants in Supabase. Confirmed anonymous booking reads are denied, a provider can read their own service bookings, another authenticated user sees no bookings, an admin can read bookings and approve a draft service, a provider's approval attempt returns HTTP 403, and the approved service appears in the public services query.
 - **Test results:** `npm test` passed (8 tests). `npm run build` passed, including `/api/admin/bookings` and `/api/admin/services`.
-- **Limitations:** The approval check used fictional test data. The migration grants were also applied directly in Supabase; the local migration must include them so the setup is reproducible.
-- **Associated commit:** Pending.
+- **Limitations:** The approval check used fictional test data. The migration grants were also applied directly in Supabase; the local migration includes them so the setup is reproducible.
+- **Associated commit:** `d5952ef`
