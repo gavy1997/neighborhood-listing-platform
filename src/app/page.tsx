@@ -1,4 +1,5 @@
-import ServiceCatalog from '../components/ServiceCatalog'
+import ListingCard from '@/components/ListingCard'
+import SponsorBanner from '@/components/SponsorBanner'
 
 export const dynamic = 'force-dynamic';
 
