@@ -1,13 +1,12 @@
 export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabaseServer';
+import { getSupabaseServerClient } from '@/lib/supabase-server';
 
 export async function GET() {
   try {
-    const { data, error } = await supabaseServer
-      .from('bookings')
-      .select('*');
+    const supabase = getSupabaseServerClient();
+    const { data, error } = await supabase.from('bookings').select('*');
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
