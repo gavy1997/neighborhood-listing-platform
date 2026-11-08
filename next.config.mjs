@@ -1,6 +1,4 @@
 const nextConfig = {
-  // Ensure this line is removed or commented out:
-  // output: 'export',
   images: {
     remotePatterns: [
       {
@@ -12,3 +10,5 @@ const nextConfig = {
     ],
   },
 };
+
+export default nextConfig;

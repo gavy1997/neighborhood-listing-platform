@@ -1,6 +1,8 @@
 import SponsorBanner from '../components/SponsorBanner';
 import ListingCard from '../components/ListingCard';
 
+export const dynamic = 'force-dynamic';
+
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-stone-100 p-8 flex flex-col items-center justify-center">
