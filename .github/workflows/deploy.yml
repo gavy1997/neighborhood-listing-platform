@@ -1,4 +1,4 @@
-name: Production Release Gates Pipeline
+Name: Production Release Gates Pipeline
 
 on:
   push:
@@ -36,3 +36,6 @@ jobs:
           SUPABASE_ANON_KEY: sb_publishable_XG2zva50QjTH-kY5_DBenQ_RUACvy51
           NEXT_PUBLIC_SUPABASE_URL: https://lhwcmttpwgeeuehuerfb.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_XG2zva50QjTH-kY5_DBenQ_RUACvy51
+
+      - name: Trigger Vercel Production Deployment
+        run: curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_71E2wswq8qehmEkxnVisDh7wcaoW/wa8ChYYVOP
