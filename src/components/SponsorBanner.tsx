@@ -1,4 +1,4 @@
-import { getActiveSponsorForProperty } from '../actions/get-sponsor'
+import { getActiveSponsorForProperty } from '@/actions/get-sponsor';
 interface SponsorBannerProps {
   propertyId: string;
   targetZip: string;
