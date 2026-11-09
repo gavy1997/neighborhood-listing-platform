@@ -1,4 +1,4 @@
-Name: Production Release Gates Pipeline
+name: Production Release Gates Pipeline
 
 on:
   push:
