@@ -1,11 +1,11 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build --webpack",
-    "start": "next start",
-    "test": "vitest run"
-  },
+  "dev": "next dev --webpack",
+  "build": "next build",
+  "start": "next start"
+}
+
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
     "ajv": "^8.20.0",
