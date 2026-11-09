@@ -1,11 +1,10 @@
 {
-  "private": true,
   "scripts": {
-  "dev": "next dev --webpack",
-  "build": "next build",
-  "start": "next start"
-}
-
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "optimize:assets": "tsx scripts/optimize-logo.js"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
     "ajv": "^8.20.0",
