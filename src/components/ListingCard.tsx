@@ -1,23 +1,22 @@
 import Image from 'next/image';
 
-export default function ListingCard() {
+export default function SponsorBadge() {
   return (
-    <article className="rounded-lg shadow-md overflow-hidden bg-white">
-      <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden shadow">
+    <div className="flex items-center gap-4 p-4 border rounded-lg bg-white shadow-sm">
+      <div className="relative w-16 h-16 rounded-full overflow-hidden bg-gray-50 flex-shrink-0">
         <Image
-          src="https://gavy1997-project-a-aster.supabase.co/storage/v1/object/public/listings/IMG_1337.jpeg"
-          alt="Front exterior view of a split-level suburban home with light siding, double garage doors, walkway, and paved driveway"
+          src="/asset/optimized/aster-logo-1x1.webp"
+          alt="Aster Corp corporate logo featuring stylized planetary ring mark"
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
-          priority={true}
+          sizes="64px"
           className="object-cover"
+          priority
         />
       </div>
-
-      <div className="p-4">
-        <h3 className="font-semibold text-lg text-gray-900">Suburban Split-Level Home</h3>
-        <p className="text-gray-600 text-sm mt-1">Piñon Hills, CA</p>
+      <div>
+        <h4 className="font-semibold text-gray-900">Aster Corp</h4>
+        <p className="text-sm text-gray-600">10% off workshop registration</p>
       </div>
-    </article>
+    </div>
   );
 }
