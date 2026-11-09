@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-stone-100 p-8 flex flex-col items-center justify-center">
+    <main className="min-h-screen bg-stone-100 p-8 flex flex-col items-center justify-start">
       <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-md space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-stone-900">
@@ -16,14 +16,11 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Featured Property Listing */}
+        {/* Render your ListingCard containing the Lab 7 media pipeline asset */}
         <ListingCard />
 
-        {/* Test SponsorBanner */}
-        <SponsorBanner
-          propertyId="b88eb142-3f8d-4d39-82e3-236bddd600c3"
-          targetZip="90266"
-        />
+        {/* Optional Sponsor Banner */}
+        <SponsorBanner />
       </div>
     </main>
   );
