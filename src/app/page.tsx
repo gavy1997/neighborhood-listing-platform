@@ -17,10 +17,11 @@ export default function HomePage() {
         </div>
 
         {/* Render your ListingCard containing the Lab 7 media pipeline asset */}
-        <ListingCard />
-
         <ListingCard propertyId="default-prop-id" targetZip="90044" />
-<SponsorBanner propertyId="default-prop-id" targetZip="90044" />
+
+        {/* Optional Sponsor Banner */}
+        <SponsorBanner propertyId="default-prop-id" targetZip="90044" />
+      </div>
     </main>
   );
 }
