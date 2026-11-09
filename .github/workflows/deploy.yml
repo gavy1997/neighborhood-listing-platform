@@ -34,6 +34,7 @@ jobs:
         env:
           SUPABASE_URL: https://lhwcmttpwgeeuehuerfb.supabase.co
           SUPABASE_ANON_KEY: sb_publishable_XG2zva50QjTH-kY5_DBenQ_RUACvy51
+          SUPABASE_SERVICE_ROLE_KEY: sb_publishable_XG2zva50QjTH-kY5_DBenQ_RUACvy51
           NEXT_PUBLIC_SUPABASE_URL: https://lhwcmttpwgeeuehuerfb.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_XG2zva50QjTH-kY5_DBenQ_RUACvy51
 
