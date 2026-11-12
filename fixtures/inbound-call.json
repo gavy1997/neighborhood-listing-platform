@@ -1,0 +1,9 @@
+{
+    "CallSid": "CA9876543210abcdef9876543210abcdef",
+    "AccountSid": "AC00000000000000000000000000000000",
+    "From": "+15558675309",
+    "To": "+15550100000",
+    "CallStatus": "ringing",
+    "Direction": "inbound",
+    "Consent": "true"
+  }
