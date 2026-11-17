@@ -43,3 +43,4 @@ node_modules/
 .env*.local
 dist/
 .next/
+data/idempotency.json

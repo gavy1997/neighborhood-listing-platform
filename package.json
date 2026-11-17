@@ -1,19 +1,10 @@
 {
-  "private": true,
   "scripts": {
-    "dev": "next",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.118.0",
-    "ajv": "^8.20.0",
-    "ajv-formats": "^3.0.1",
-    "next": "^16.3.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "zod": "^4.6.5"
+    "lint": "next lint",
+    "test": "vitest run src/test && node --test tests/webhook.test.js"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
@@ -22,5 +13,15 @@
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
+    "@upstash/redis": "^1.41.0",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "server-only": "^0.0.1",
+    "twilio": "^6.3.0",
+    "zod": "^4.6.7"
   }
 }

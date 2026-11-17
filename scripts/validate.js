@@ -1,28 +1,26 @@
-const fs = require('fs');
+const sharp = require('sharp');
 const path = require('path');
-const Ajv = require('ajv');
-const addFormats = require('ajv-formats');
+const fs = require('fs');
 
-const schemaPath = path.join(__dirname, '../src/schemas/property.schema.json');
-const dataPath = path.join(__dirname, '../data/generated/synthetic_properties.json');
+async function generateLab7Assets() {
+  const rawPath = path.join(__dirname, '../public/asset/raw/aster-logo-orig.png');
+  const optimizedDir = path.join(__dirname, '../public/asset/optimized');
+  const outputPath = path.join(optimizedDir, 'aster-logo-1x1.webp');
 
-const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'));
-const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-
-const ajv = new Ajv({ allErrors: true });
-addFormats(ajv);
-
-const validate = ajv.compile(schema);
-const records = Array.isArray(data) ? data : [data];
-
-console.log(`\n--- Running Ajv Validation on ${records.length} Record(s) ---`);
-
-records.forEach((record, idx) => {
-  const valid = validate(record);
-  if (valid) {
-    console.log(`Record #${idx + 1}: VALID`);
-  } else {
-    console.log(`Record #${idx + 1}: INVALID`);
-    console.log(JSON.stringify(validate.errors, null, 2));
+  if (!fs.existsSync(optimizedDir)) {
+    fs.mkdirSync(optimizedDir, { recursive: true });
   }
-});
+
+  // Exact 1:1 square crop centered on the logo mark
+  await sharp(rawPath)
+    .resize(512, 512, {
+      fit: 'cover',
+      position: 'centre'
+    })
+    .webp({ quality: 90 })
+    .toFile(outputPath);
+
+  console.log('Successfully generated Lab 7 1:1 framed asset at:', outputPath);
+}
+
+generateLab7Assets().catch(console.error);
