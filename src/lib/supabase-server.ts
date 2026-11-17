@@ -1,17 +1,13 @@
-import { createClient } from '@supabase/supabase-js';
+import 'server-only'
+import { createClient } from '@supabase/supabase-js'
 
-const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const url = (typeof rawUrl === 'string' && rawUrl.startsWith('http')) 
-  ? rawUrl 
-  : 'https://placeholder.supabase.co';
+export function createServerClient(accessToken?: string) {
+  const url = process.env.SUPABASE_URL
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY
+  if (!url || !key) return null
 
-const rawKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const serviceRoleKey = (typeof rawKey === 'string' && rawKey.length > 5) 
-  ? rawKey 
-  : 'placeholder-key-for-build-phase';
-
-export const supabaseAdmin = createClient(url, serviceRoleKey, {
-  auth: {
-    persistSession: false,
-  },
-});
+  return createClient(url, key, {
+    auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
+    global: accessToken ? { headers: { Authorization: `Bearer ${accessToken}` } } : undefined,
+  })
+}
