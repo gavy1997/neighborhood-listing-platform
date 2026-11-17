@@ -138,4 +138,41 @@ describe('Contextual Sponsor Matching Engine', () => {
     const candidate = { ...base, distanceMiles: Number.NaN }
     expect(selectSponsor(context, [candidate])).toBeNull()
   })
+
+    test('demonstrates predictable outcomes for three property ZIP contexts', () => {
+    const exactZipProperty = { ...context, zipCode: '90032' }
+    const nearbyProperty = { ...context, zipCode: '90033' }
+    const outOfRangeProperty = { ...context, zipCode: '90034' }
+
+    const exactZipSponsor = {
+      ...base,
+      id: 'exact-zip-sponsor',
+      zipCodes: ['90032'],
+      distanceMiles: 25,
+    }
+
+    const nearbySponsor = {
+      ...base,
+      id: 'nearby-sponsor',
+      zipCodes: ['90032'],
+      distanceMiles: 3,
+      coverageRadiusMiles: 5,
+    }
+
+    const outOfRangeSponsor = {
+      ...base,
+      id: 'out-of-range-sponsor',
+      zipCodes: ['90032'],
+      distanceMiles: 6,
+      coverageRadiusMiles: 5,
+    }
+
+    expect(selectSponsor(exactZipProperty, [exactZipSponsor])?.id).toBe(
+      'exact-zip-sponsor',
+    )
+    expect(selectSponsor(nearbyProperty, [nearbySponsor])?.id).toBe(
+      'nearby-sponsor',
+    )
+    expect(selectSponsor(outOfRangeProperty, [outOfRangeSponsor])).toBeNull()
+  })
 })
