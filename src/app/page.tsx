@@ -21,8 +21,8 @@ export default function HomePage() {
 
         {/* Test SponsorBanner */}
         <SponsorBanner
-          propertyId="b88eb142-3f8d-4d39-82e3-236bddd600c3"
-          targetZip="90266"
+          propertyId="de2fb99f-7791-4391-a755-4a2bc6ca934f"
+          targetZip="90000"
         />
       </div>
     </main>

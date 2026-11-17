@@ -96,3 +96,38 @@
 | **Part 4: RLS Policies** | Generated least-privilege RLS policies for anonymous, provider, client, and admin roles. | Provider-scoped `UPDATE`/`DELETE` policy restricting modifications to `draft` or `suspended` listings. | Rejected policy allowing providers to delete live `approved` listings without admin oversight. | Executed SQL audit matrix tests in Supabase SQL Editor as different roles. | `security(rls): enforce role-based access control policies` |
 | **Part 5: Data Contract** | Generated Zod validation schema for service POST requests with strict property checks. | Zod object schema with `.strict()` modifier and min/max length constraints. | Rejected default `.passthrough()` validation as it allows unexpected body attributes. | Ran unit tests against API handler using invalid payloads (missing titles, extra keys). | `feat(api): implement runtime validation contract and service handlers` |
 | **Part 6: UI Component** | Generated responsive Tailwind React component for `ServiceCard.tsx`. | Semantic `<article>`, `<header>`, `<ul>` structure and Tailwind `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`. | Rejected generic `<div>` layout and buttons missing explicit `aria-label` attributes. | Tested WCAG keyboard navigation (`Tab`/`Enter`) and inspected DOM structure. | `feat(ui): add accessible semantic ServiceCard component` |
+## Week 6 Lab 6 — Adversarial Sponsor Matching Review
+
+### Prompt
+
+> Act as an adversarial tester for the contextual sponsor-selection function. Find edge cases involving dates, ZIP codes, distance, ties, approval status, empty data, and unsafe URLs. Do not suggest user profiling or sensitive housing targeting.
+
+### Tools Consulted
+
+- **Gemini:** Reviewed sponsor-selection and destination-URL edge cases.
+- **ChatGPT:** Critiqued the matching rules and Gemini’s findings.
+
+### Useful Findings and Decisions
+
+- Added checks for inclusive campaign date boundaries, malformed or inverted date ranges, exact ZIP matches, radius boundaries, inactive or pending sponsors, empty candidate lists, and deterministic tie-breaking.
+- Kept tier ahead of distance in ranking as an intentional policy: eligible higher-tier sponsors rank first; distance, impression count, and sponsor ID break later ties.
+- Require valid distance, radius, and impression values so missing or invalid data cannot affect ranking unpredictably.
+- Use a stable sponsor-ID comparison for the final tie-break.
+- Hardened destination URL validation to require public HTTPS URLs and reject credentials, IP addresses, local or reserved hostnames, and nonstandard ports. The redirect route also validates the stored destination before redirecting.
+- Treat campaign dates as inclusive calendar dates. ZIP targeting uses exact ZIP matching; radius matching is evaluated separately.
+
+### Rejected or Qualified Findings
+
+- Treated “a higher-tier sponsor may be farther away than a lower-tier sponsor” as a policy choice to document, rather than an implementation defect.
+- Did not add DNS lookups or fetch sponsor destinations during validation. The app redirects the visitor and does not request the destination from the server.
+
+### Verification
+
+- Added sponsor-matching and URL-validation tests.
+- `npm test`: **32 tests passed** across 3 test files.
+- `npm run build`: completed successfully.
+- Tested the redirect route with an invalid sponsor ID and an unsafe stored URL; it returned errors instead of redirecting. A valid approved sponsor destination returned HTTP 302.
+
+### Associated Commit
+
+Pending.
