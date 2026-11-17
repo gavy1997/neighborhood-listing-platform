@@ -1,13 +1,9 @@
-import 'server-only'
 import { createClient } from '@supabase/supabase-js'
 
-export function createServerClient(accessToken?: string) {
-  const url = process.env.SUPABASE_URL
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY
-  if (!url || !key) return null
+// Standard server client or admin client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
-  return createClient(url, key, {
-    auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
-    global: accessToken ? { headers: { Authorization: `Bearer ${accessToken}` } } : undefined,
-  })
-}
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: { persistSession: false }
+})
