@@ -125,7 +125,7 @@
 ### Verification
 
 - Added sponsor-matching and URL-validation tests.
-- `npm test`: 32 tests passed across 3 test files.
+- `npm test`: 33 tests passed across 3 test files.
 - `npm run build`: completed successfully.
 - Tested the redirect route with an invalid sponsor ID and an unsafe stored URL; it returned errors instead of redirecting. A valid approved sponsor destination returned HTTP 302.
 
