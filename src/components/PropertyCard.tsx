@@ -3,13 +3,15 @@ import Image from 'next/image';
 interface Property {
   id: string;
   title: string;
-  hourly_rate?: number;
-  duration_minutes?: number;
-  coverage_radius_miles?: number;
-  // add other property fields as needed
+  image_url?: string;
+  [key: string]: any;
 }
 
-export function PropertyCard({ property }: { property: Property }) {
+interface PropertyCardProps {
+  property: Property;
+}
+
+export function PropertyCard({ property }: PropertyCardProps) {
   return (
     <div className="border rounded-lg p-4 shadow-sm">
       <div className="relative w-full h-48 mb-2">
@@ -21,7 +23,6 @@ export function PropertyCard({ property }: { property: Property }) {
         />
       </div>
       <h3 className="font-semibold text-lg">{property.title}</h3>
-      {/* Other details */}
     </div>
   );
 }
