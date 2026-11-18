@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
-import { ServiceCreateSchema } from '../../../schemas/service'
+import { ServiceCreateSchema } from '@/schemas/service'
 
 function createUserClient(authorization?: string) {
   const url = process.env.SUPABASE_URL

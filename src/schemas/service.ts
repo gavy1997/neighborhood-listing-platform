@@ -1,10 +1,11 @@
 import { z } from 'zod'
 
-export const ServiceCreateSchema = z
-  .object({
-    title: z.string().trim().min(5),
-    hourly_rate: z.number().finite().nonnegative(),
-    duration_minutes: z.number().int().min(15),
-    coverage_radius_miles: z.number().int().positive(),
-  })
-  .strict()
+export const ServiceCreateSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(1, 'Description is required'),
+  category: z.string().min(1, 'Category is required'),
+  price: z.number().optional(),
+  location: z.string().optional(),
+})
+
+export type ServiceCreateInput = z.infer<typeof ServiceCreateSchema>
