@@ -4,7 +4,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "echo 'Tests passed successfully' && exit 0"
+    "test": "vitest run src/test && node --test tests/webhook.test.js"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
