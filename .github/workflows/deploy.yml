@@ -23,9 +23,9 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Run Type Check and Build
-        continue-on-error: true
+        
         run: |
-          npx tsc --noEmit || true
+          npx tsc --noEmit
           npm run build -- --webpack
         env:
           SUPABASE_URL: https://lhwcmttpwgeeuehuerfb.supabase.co
@@ -35,5 +35,5 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_XG2zva50QjTH-kY5_DBenQ_RUACvy51
 
       - name: Run Unit Tests
-        continue-on-error: true
-        run: npm test || true
+        
+        run: npm test
