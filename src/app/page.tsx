@@ -12,13 +12,6 @@ export interface Property {
   imageUrl?: string;
 }
 
-export interface Sponsor {
-  id: string;
-  name: string;
-  tagline?: string;
-  url?: string;
-}
-
 const sampleProperties: Property[] = [
   {
     id: 'prop-101',
@@ -29,19 +22,17 @@ const sampleProperties: Property[] = [
   },
 ];
 
-const sampleSponsors: Sponsor[] = [];
-
 export default function HomePage() {
   return (
     <main>
       <h1>Property Listings</h1>
       <SearchFilters />
-      <SponsorBanner propertyId="prop-101" targetZip="90001" />
-      <div>
-        {sampleProperties.map((property) => (
-          <PropertyCard key={property.id} property={property} />
-        ))}
-      </div>
+      {sampleProperties.map((property) => (
+        <div key={property.id}>
+          <PropertyCard property={property} />
+          <SponsorBanner propertyId={property.id} targetZip="90001" />
+        </div>
+      ))}
     </main>
   );
 }
