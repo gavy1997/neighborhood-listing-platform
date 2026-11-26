@@ -38,4 +38,3 @@ export const SearchFilters: React.FC = () => {
       </form>
     </section>
   );
-};
