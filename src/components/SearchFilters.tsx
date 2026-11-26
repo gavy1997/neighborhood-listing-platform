@@ -37,4 +37,5 @@ export const SearchFilters: React.FC = () => {
         </div>
       </form>
     </section>
+  );
 };
