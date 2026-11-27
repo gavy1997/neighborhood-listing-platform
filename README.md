@@ -48,3 +48,6 @@ If unapproved, inaccurate, or non-compliant marketing copy reaches production:
 - Vercel URL: https://neighborhood-listing-platform-lime.vercel.app/
 ![Production Release Gates Pipeline](https://github.com/gavy1997/neighborhood-listing-platform/actions/workflows/deploy.yml/badge.svg)
 <!-- trigger build -->
+
+## Lab 1 Partner Review
+Verified Lab 1 app shell setup, routes, and core layout for partner review by @mfalujo23.
