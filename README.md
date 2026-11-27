@@ -50,4 +50,4 @@ If unapproved, inaccurate, or non-compliant marketing copy reaches production:
 <!-- trigger build -->
 
 ## Lab 1 Partner Review
-Verified Lab 1 app shell setup, routes, and core layout for partner review by @mfalujo23.
+Verified app shell setup, routes (`src/app/page.tsx`), and core layout with partner review by `@mfalujo23`, with CI checks passing on `main` (`1cdf072`, release `v0.5.1`).
