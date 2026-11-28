@@ -29,9 +29,7 @@ App (or Page)
         ├── Heading (h2 / h3 in proper document order)
         ├── Address & Price
         ├── Facts List (ul > li)
-        └── CTA Link/Button ("View Details for [Property Name]")
-## Lab 1 Partner Review
-Verified app shell setup, routes (`src/app/page.tsx`), and core layout with partner review by `@mfalujo23`, with CI checks passing on `main` (`1cdf072`, release `v0.5.1`).
+        └── CTA Link/Button ("View Details for [Property Name]"
 
 ### Content Correction Protocol
 If unapproved, inaccurate, or non-compliant marketing copy reaches production:
